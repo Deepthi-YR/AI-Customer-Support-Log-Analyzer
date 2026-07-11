@@ -1,4 +1,4 @@
-label_encoder = joblib.load("label_encoder.pkl")
+
 # ==========================================================
 # AI CUSTOMER SUPPORT LOG ANALYZER
 # Streamlit Dashboard
@@ -38,6 +38,7 @@ df=load_data()
 
 model = joblib.load("best_model.joblib")
 vectorizer = joblib.load("tfidf_vectorizer.pkl")
+label_encoder = joblib.load("label_encoder.pkl")
 
 # ----------------------------------------------------------
 # TITLE
