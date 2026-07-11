@@ -27,8 +27,7 @@ def load_data():
         st.error(f"Dataset not found: {file_path}")
         st.stop()
 
-    return pd.read_csv(file_path)
- df = load_data()                     
+    return pd.read_csv(file_path)              
     
 # ----------------------------------------------------------
 # LOAD MODEL
