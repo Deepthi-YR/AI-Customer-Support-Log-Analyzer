@@ -33,7 +33,7 @@ def load_data():
 # LOAD MODEL
 # ----------------------------------------------------------
 
-model = joblib.load("ticket_classifier.pkl")
+model = joblib.load("best_model.pkl")
 vectorizer = joblib.load("tfidf_vectorizer.pkl")
 
 # ----------------------------------------------------------
