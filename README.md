@@ -28,10 +28,16 @@ This project analyzes customer support tickets using Machine Learning and Busine
 
 ## Machine Learning
 
-Model:
-- Randon Forest Classifier
+Models Evaluated:
+- Logistic Regression
+- Multinomial Naive Bayes
+- Linear SVM
+- Random Forest Classifier
 
-Vectorizer:
+Final Model Deployed:
+- Random Forest Classifier
+
+Vectorization:
 - TF-IDF
 
 Deployment:
