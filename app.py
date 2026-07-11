@@ -235,9 +235,10 @@ elif page == "AI Ticket Classifier":
     st.header("🤖 AI Ticket Category Predictor")
 
     st.write("""
-    Enter a customer complaint below and let the trained Machine Learning model
-    predict the most likely ticket category.
-    """)
+Enter a customer complaint below. This application uses the best-performing
+Random Forest Classifier trained on customer support tickets to predict
+the most likely ticket category.
+""")
 
     # --------------------------------------------------
     # USER INPUT
@@ -292,14 +293,11 @@ elif page == "AI Ticket Classifier":
 
             st.info(
                 f"""
-                Based on the complaint entered, the machine learning model predicts
-                that this support ticket belongs to the **{prediction}** category.
-
-                This prediction can help customer support teams automatically route
-                tickets to the appropriate department, reducing response time and
-                improving operational efficiency.
-                """
-            )
+                Based on the complaint entered, the Random Forest Classifier predicts
+                that this ticket belongs to the selected category.
+                This prediction helps automatically route customer tickets to the
+                appropriate support team, improving response time and service efficiency.
+                """)
 
     # --------------------------------------------------
     # SAMPLE INPUTS
