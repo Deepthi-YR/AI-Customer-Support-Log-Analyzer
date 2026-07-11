@@ -27,7 +27,11 @@ def load_data():
         st.error(f"Dataset not found: {file_path}")
         st.stop()
 
-    return pd.read_csv(file_path)              
+    return pd.read_csv(file_path)  
+
+df=load_data()
+st.write(df.head())
+st.arite(df.shape())
     
 # ----------------------------------------------------------
 # LOAD MODEL
