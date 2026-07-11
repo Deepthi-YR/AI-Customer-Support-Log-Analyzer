@@ -1,3 +1,4 @@
+label_encoder = joblib.load("label_encoder.pkl")
 # ==========================================================
 # AI CUSTOMER SUPPORT LOG ANALYZER
 # Streamlit Dashboard
@@ -262,50 +263,95 @@ the most likely ticket category.
     # PREDICT BUTTON
     # --------------------------------------------------
 
-    if st.button("Predict Ticket Category"):
+if st.button("Predict Ticket Category"):
 
-        if user_text.strip() == "":
+    if user_text.strip() == "":
 
-            st.warning("Please enter a customer complaint.")
+        st.warning("Please enter a customer complaint.")
 
-        else:
+    else:
 
-            # Vectorize text
-            text_vector = vectorizer.transform([user_text])
+        # Vectorize text
+        text_vector = vectorizer.transform([user_text])
 
-            # Predict category
-            prediction = model.predict(text_vector)[0]
+        # Predict category (encoded)
+        prediction = model.predict(text_vector)[0]
 
-            st.success(f"### Predicted Ticket Category: **{prediction}**")
+        # Convert encoded value to actual category
+        category = label_encoder.inverse_transform([prediction])[0]
 
-            # --------------------------------------------------
-            # CONFIDENCE SCORE
-            # --------------------------------------------------
+        st.success(f"### 🎯 Predicted Ticket Category: **{category}**")
 
-            if hasattr(model, "predict_proba"):
+        # --------------------------------------------------
+        # CONFIDENCE SCORES
+        # --------------------------------------------------
 
-                probability = model.predict_proba(text_vector)
+        if hasattr(model, "predict_proba"):
 
-                confidence = probability.max() * 100
+            probabilities = model.predict_proba(text_vector)[0]
 
-                st.metric(
-                    label="Prediction Confidence",
-                    value=f"{confidence:.2f}%"
-                )
+            confidence = probabilities.max() * 100
 
-            # --------------------------------------------------
-            # INTERPRETATION
-            # --------------------------------------------------
+            st.metric(
+                label="Prediction Confidence",
+                value=f"{confidence:.2f}%"
+            )
 
-            st.subheader("Interpretation")
+            # Show confidence for every category
+            class_names = label_encoder.inverse_transform(model.classes_)
 
-            st.info(
-                f"""
-                Based on the complaint entered, the Random Forest Classifier predicts
-                that this ticket belongs to the selected category.
-                This prediction helps automatically route customer tickets to the
-                appropriate support team, improving response time and service efficiency.
-                """)
+            confidence_df = pd.DataFrame({
+                "Ticket Category": class_names,
+                "Confidence (%)": (probabilities * 100).round(2)
+            })
+
+            confidence_df = confidence_df.sort_values(
+                "Confidence (%)",
+                ascending=False
+            )
+
+            st.subheader("Confidence Across All Categories")
+
+            st.dataframe(
+                confidence_df,
+                use_container_width=True,
+                hide_index=True
+            )
+
+        # --------------------------------------------------
+        # DETECTED KEYWORDS
+        # --------------------------------------------------
+
+        st.subheader("Detected Keywords")
+
+        keywords = [word.strip(".,!?") for word in user_text.lower().split()]
+
+        st.write(", ".join(keywords[:10]))
+
+        # --------------------------------------------------
+        # INTERPRETATION
+        # --------------------------------------------------
+
+        st.subheader("Interpretation")
+
+        st.info(
+            f"""
+**Predicted Category:** {category}
+
+The Random Forest model analyzed the complaint using TF-IDF features and compared
+its wording with historical customer support tickets.
+
+The complaint contains keywords such as:
+
+{', '.join(keywords[:5])}
+
+Based on similar complaints seen during training, the ticket is most likely
+classified as **{category}** with a confidence of **{confidence:.2f}%**.
+
+This helps customer support teams automatically route tickets to the appropriate department,
+reducing response time and improving customer service efficiency.
+"""
+        )
 
     # --------------------------------------------------
     # SAMPLE INPUTS
