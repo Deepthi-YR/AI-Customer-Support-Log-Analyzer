@@ -7,6 +7,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import joblib
+import os
 
 # ----------------------------------------------------------
 # PAGE CONFIG
@@ -20,9 +21,14 @@ st.set_page_config(page_title="AI Customer Support Log Analyzer",page_icon="🎧
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("customer_support_cleaned.csv")
-df = load_data()
+    file_path = "customer_support_cleaned.csv"
 
+    if not os.path.exists(file_path):
+        st.error(f"Dataset not found: {file_path}")
+        st.stop()
+
+    return pd.read_csv(file_path)
+    
 # ----------------------------------------------------------
 # LOAD MODEL
 # ----------------------------------------------------------
