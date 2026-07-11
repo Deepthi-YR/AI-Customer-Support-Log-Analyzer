@@ -30,8 +30,6 @@ def load_data():
     return pd.read_csv(file_path)  
 
 df=load_data()
-st.write(df.head())
-st.arite(df.shape())
     
 # ----------------------------------------------------------
 # LOAD MODEL
