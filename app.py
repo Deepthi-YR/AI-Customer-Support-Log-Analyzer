@@ -26,7 +26,7 @@ st.set_page_config(
 @st.cache_data
 def load_data():
 
-    file_path = "customer_support_cleaned.csv"
+    file_path = "customer_support_cleaned.xls"
 
     if not os.path.exists(file_path):
         st.error("❌ Dataset not found.")
