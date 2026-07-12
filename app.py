@@ -852,7 +852,118 @@ elif page == "Dataset Explorer":
 
     st.header("🔍 Dataset Explorer")
 
-    st.info("Dataset Explorer will be added in Part 5.")
+    st.write("Explore, search and filter customer support tickets.")
+
+    st.divider()
+
+    # --------------------------------------------------
+    # SEARCH
+    # --------------------------------------------------
+
+    search_text = st.text_input(
+        "🔎 Search Ticket Description",
+        placeholder="Enter keyword..."
+    )
+
+    filtered_df = df.copy()
+
+    if search_text:
+
+        filtered_df = filtered_df[
+            filtered_df["Ticket Description"]
+            .astype(str)
+            .str.contains(search_text, case=False, na=False)
+        ]
+
+    # --------------------------------------------------
+    # FILTERS
+    # --------------------------------------------------
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+
+        status = st.selectbox(
+            "Ticket Status",
+            ["All"] + sorted(df["Ticket Status"].dropna().unique().tolist())
+        )
+
+    with col2:
+
+        priority = st.selectbox(
+            "Ticket Priority",
+            ["All"] + sorted(df["Ticket Priority"].dropna().unique().tolist())
+        )
+
+    with col3:
+
+        channel = st.selectbox(
+            "Ticket Channel",
+            ["All"] + sorted(df["Ticket Channel"].dropna().unique().tolist())
+        )
+
+    if status != "All":
+
+        filtered_df = filtered_df[
+            filtered_df["Ticket Status"] == status
+        ]
+
+    if priority != "All":
+
+        filtered_df = filtered_df[
+            filtered_df["Ticket Priority"] == priority
+        ]
+
+    if channel != "All":
+
+        filtered_df = filtered_df[
+            filtered_df["Ticket Channel"] == channel
+        ]
+
+    st.divider()
+
+    # --------------------------------------------------
+    # DATASET
+    # --------------------------------------------------
+
+    st.subheader("Filtered Dataset")
+
+    st.write(f"Showing **{len(filtered_df)}** records")
+
+    st.dataframe(
+        filtered_df,
+        use_container_width=True,
+        height=450
+    )
+
+    # --------------------------------------------------
+    # DOWNLOAD
+    # --------------------------------------------------
+
+    csv = filtered_df.to_csv(index=False).encode("utf-8")
+
+    st.download_button(
+        "📥 Download Filtered Data",
+        csv,
+        "filtered_customer_support_data.csv",
+        "text/csv"
+    )
+
+    st.divider()
+
+    # --------------------------------------------------
+    # DATA SUMMARY
+    # --------------------------------------------------
+
+    st.subheader("Dataset Summary")
+
+    c1, c2, c3 = st.columns(3)
+
+    c1.metric("Rows", filtered_df.shape[0])
+
+    c2.metric("Columns", filtered_df.shape[1])
+
+    c3.metric("Missing Values", filtered_df.isna().sum().sum())
 
 # ==========================================================
 # ABOUT PROJECT
