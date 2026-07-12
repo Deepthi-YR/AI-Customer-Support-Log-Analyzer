@@ -1,12 +1,11 @@
-
 # ==========================================================
 # AI CUSTOMER SUPPORT LOG ANALYZER
-# Streamlit Dashboard
+# STREAMLIT APPLICATION
+# PART 1A - HOME PAGE
 # ==========================================================
 
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import joblib
 import os
 
@@ -14,7 +13,11 @@ import os
 # PAGE CONFIG
 # ----------------------------------------------------------
 
-st.set_page_config(page_title="AI Customer Support Log Analyzer",page_icon="🎧",layout="wide")
+st.set_page_config(
+    page_title="AI Customer Support Log Analyzer",
+    page_icon="🎧",
+    layout="wide"
+)
 
 # ----------------------------------------------------------
 # LOAD DATA
@@ -22,219 +25,285 @@ st.set_page_config(page_title="AI Customer Support Log Analyzer",page_icon="🎧
 
 @st.cache_data
 def load_data():
-    file_path = "customer_support_cleaned.xls"
+
+    file_path = "customer_support_cleaned.csv"
 
     if not os.path.exists(file_path):
-        st.error(f"Dataset not found: {file_path}")
+        st.error("❌ Dataset not found.")
         st.stop()
 
-    return pd.read_csv(file_path)  
+    df = pd.read_csv(file_path)
 
-df=load_data()
-    
+    return df
+
+
+df = load_data()
+
 # ----------------------------------------------------------
-# LOAD MODEL
+# LOAD MODEL FILES
 # ----------------------------------------------------------
 
-model = joblib.load("best_model.joblib")
-vectorizer = joblib.load("tfidf_vectorizer.pkl")
-label_encoder = joblib.load("label_encoder.pkl")
+@st.cache_resource
+def load_models():
+
+    try:
+
+        model = joblib.load("best_model.joblib")
+        vectorizer = joblib.load("tfidf_vectorizer.pkl")
+        label_encoder = joblib.load("label_encoder.pkl")
+
+        return model, vectorizer, label_encoder
+
+    except:
+
+        st.warning("Model files not found. AI Classifier will be unavailable.")
+
+        return None, None, None
+
+
+model, vectorizer, label_encoder = load_models()
+
+# ----------------------------------------------------------
+# DATA PREPARATION
+# ----------------------------------------------------------
+
+# Convert Date column safely
+
+if "Date of Purchase" in df.columns:
+
+    df["Date of Purchase"] = pd.to_datetime(
+        df["Date of Purchase"],
+        errors="coerce"
+    )
+
+# Numeric columns
+
+numeric_columns = [
+    "Customer Satisfaction Rating",
+    "First Response Time",
+    "Time to Resolution"
+]
+
+for col in numeric_columns:
+
+    if col in df.columns:
+
+        df[col] = pd.to_numeric(
+            df[col],
+            errors="coerce"
+        )
+
+# ----------------------------------------------------------
+# KPI CALCULATIONS
+# ----------------------------------------------------------
+
+total_tickets = len(df)
+
+closed_tickets = (
+    df["Ticket Status"]
+    .astype(str)
+    .str.lower()
+    .str.contains("closed")
+    .sum()
+)
+
+open_tickets = (
+    df["Ticket Status"]
+    .astype(str)
+    .str.lower()
+    .str.contains("open")
+    .sum()
+)
+
+avg_rating = round(
+    df["Customer Satisfaction Rating"].mean(),
+    2
+)
 
 # ----------------------------------------------------------
 # TITLE
 # ----------------------------------------------------------
 
 st.title("🎧 AI Customer Support Log Analyzer")
-st.markdown("""
-Analyze customer support tickets, visualize business insights,
-and automatically classify new customer complaints using Machine Learning.
-""")
+
+st.caption(
+    "Business Analytics Dashboard with AI-powered Ticket Classification"
+)
 
 # ----------------------------------------------------------
 # SIDEBAR
 # ----------------------------------------------------------
 
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Select Page",["Dashboard","Business Insights","AI Ticket Classifier"])
 
+page = st.sidebar.radio(
+
+    "Select Page",
+
+    [
+
+        "Home",
+
+        "Dashboard",
+
+        "Business Insights",
+
+        "AI Ticket Classifier",
+
+        "Dataset Explorer",
+
+        "About Project"
+
+    ]
+
+)
 
 # ==========================================================
-# DASHBOARD PAGE
+# HOME PAGE
 # ==========================================================
 
-if page == "Dashboard":
+if page == "Home":
 
-    st.header("📊 Dashboard Overview")
+    st.header("🏠 Home")
 
-    # -----------------------------
-    # KPI CALCULATIONS
-    # -----------------------------
+    st.write("""
 
-    total_tickets = len(df)
-    closed_tickets = (df["Ticket Status"].astype(str).str.lower().str.contains("closed").sum())
+Welcome to the **AI Customer Support Log Analyzer**.
 
-    open_tickets = (df["Ticket Status"].astype(str).str.lower().str.contains("open").sum())
+This application helps analyze customer support tickets,
+generate business insights and automatically classify
+customer complaints using Natural Language Processing (NLP)
+and Machine Learning.
 
-    avg_rating = round(df["Customer Satisfaction Rating"].mean(),2)
-
-    # -----------------------------
-    # KPI CARDS
-    # -----------------------------
-
-    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-    kpi1.metric("Total Tickets",total_tickets)
-
-    kpi2.metric("Closed Tickets",closed_tickets)
-
-    kpi3.metric("Open Tickets",open_tickets)
-
-    kpi4.metric("Average Rating",avg_rating)
+""")
 
     st.divider()
 
-    # -----------------------------
-    # STATUS DISTRIBUTION
-    # -----------------------------
+    # ------------------------------------------------------
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("Ticket Status Distribution")
-        status_df = (df["Ticket Status"].value_counts().reset_index())
+    st.subheader("Project Overview")
 
-        status_df.columns = ["Status","Count"]
+    col1, col2, col3, col4 = st.columns(4)
 
-        fig = px.pie(status_df,names="Status",values="Count",hole=0.45)
+    col1.metric(
+        "Total Tickets",
+        total_tickets
+    )
 
-        st.plotly_chart(fig,use_container_width=True)
+    col2.metric(
+        "Closed Tickets",
+        closed_tickets
+    )
 
-    # -----------------------------
-    # TICKET TYPE
-    # -----------------------------
+    col3.metric(
+        "Open Tickets",
+        open_tickets
+    )
 
-    with col2:
-        st.subheader("Ticket Type Distribution")
-
-        ticket_df = (df["Ticket Type"].value_counts().reset_index())
-
-        ticket_df.columns = ["Ticket Type","Count"]
-
-        fig = px.bar(ticket_df,x="Ticket Type",y="Count",color="Ticket Type")
-
-        st.plotly_chart(fig,use_container_width=True)
+    col4.metric(
+        "Average Rating",
+        avg_rating
+    )
 
     st.divider()
 
-    # -----------------------------
-    # MONTHLY TREND
-    # -----------------------------
+    # ------------------------------------------------------
 
-    st.subheader("Monthly Ticket Trend")
+    st.subheader("Project Workflow")
 
-    df["Date of Purchase"] = pd.to_datetime(df["Date of Purchase"])
+    st.markdown("""
 
-    df["Month"] = (df["Date of Purchase"].dt.to_period("M").astype(str))
+Customer Complaint
 
-    monthly = (df.groupby("Month").size().reset_index(name="Tickets"))
+⬇️
 
-    fig = px.line(monthly,x="Month",y="Tickets",markers=True)
+Text Cleaning & Preprocessing
 
-    st.plotly_chart(fig,use_container_width=True)
+⬇️
+
+TF-IDF Vectorization
+
+⬇️
+
+Random Forest Machine Learning Model
+
+⬇️
+
+Automatic Ticket Category Prediction
+
+""")
+
+    st.divider()
+
+    # ------------------------------------------------------
+
+    st.subheader("Technologies Used")
+
+    c1, c2, c3 = st.columns(3)
+
+    with c1:
+
+        st.write("🐍 Python")
+
+        st.write("📊 Pandas")
+
+    with c2:
+
+        st.write("🤖 Scikit-learn")
+
+        st.write("📝 NLP")
+
+    with c3:
+
+        st.write("🌐 Streamlit")
+
+        st.write("📈 Plotly")
+
+    st.divider()
+
+    # ------------------------------------------------------
+
+    st.subheader("Project Highlights")
+
+    st.success("""
+
+✔ Customer Support Ticket Analysis
+
+✔ Business KPI Dashboard
+
+✔ Interactive Visualizations
+
+✔ NLP Text Processing
+
+✔ TF-IDF Feature Engineering
+
+✔ Random Forest Classification
+
+✔ Automatic Ticket Categorization
+
+✔ Streamlit Web Application
+
+""")
 
 # ==========================================================
-# BUSINESS INSIGHTS PAGE
+# DASHBOARD
+# ==========================================================
+
+elif page == "Dashboard":
+
+    st.header("📊 Dashboard")
+
+    st.info("Dashboard page will be added in Part 2.")
+
+# ==========================================================
+# BUSINESS INSIGHTS
 # ==========================================================
 
 elif page == "Business Insights":
 
     st.header("📈 Business Insights")
 
-    # --------------------------------------------------
-    # FIRST ROW
-    # --------------------------------------------------
-
-    col1, col2 = st.columns(2)
-
-    # Priority Analysis
-    with col1:
-
-        st.subheader("Ticket Priority")
-
-        priority_df = (df["Ticket Priority"].value_counts().reset_index())
-
-        priority_df.columns = ["Priority","Count"]
-
-        fig = px.bar(priority_df,x="Priority",y="Count",color="Priority",text="Count")
-
-        fig.update_traces(textposition="outside")
-
-        st.plotly_chart(fig,use_container_width=True)
-
-    # Channel Analysis
-    with col2:
-
-        st.subheader("Ticket Channel")
-
-        channel_df = (df["Ticket Channel"].value_counts().reset_index())
-
-        channel_df.columns = ["Channel","Count"]
-
-        fig = px.pie(channel_df,names="Channel",values="Count",hole=0.45)
-
-        st.plotly_chart(fig,use_container_width=True)
-
-    st.divider()
-
-    # --------------------------------------------------
-    # SECOND ROW
-    # --------------------------------------------------
-
-    col3, col4 = st.columns(2)
-
-    # Top Products
-    with col3:
-
-        st.subheader("Top 10 Products with Support Tickets")
-
-        product_df = (df["Product Purchased"].value_counts().head(10).reset_index())
-
-        product_df.columns = ["Product","Count"]
-
-        fig = px.bar(product_df,x="Product",y="Count",color="Count",text="Count")
-
-        fig.update_layout(xaxis_tickangle=-30)
-
-        st.plotly_chart(fig,use_container_width=True)
-
-    # Customer Satisfaction
-    with col4:
-
-        st.subheader("Customer Satisfaction Ratings")
-
-        rating_df = (df["Customer Satisfaction Rating"].value_counts().sort_index().reset_index())
-
-        rating_df.columns = ["Rating","Count"]
-
-        fig = px.bar(rating_df,x="Rating",y="Count",color="Rating",text="Count")
-
-        st.plotly_chart(fig,use_container_width=True)
-
-    st.divider()
-
-    # --------------------------------------------------
-    # GENDER DISTRIBUTION
-    # --------------------------------------------------
-
-    st.subheader("Customer Gender Distribution")
-
-    gender_df = (df["Customer Gender"].value_counts().reset_index())
-
-    gender_df.columns = ["Gender","Count"]
-
-    fig = px.pie(gender_df,names="Gender",values="Count",hole=0.45)
-
-    st.plotly_chart(fig,use_container_width=True)
-
-    st.success("Business insights generated successfully!")
+    st.info("Business Insights page will be added in Part 3.")
 
 # ==========================================================
 # AI TICKET CLASSIFIER
@@ -242,140 +311,50 @@ elif page == "Business Insights":
 
 elif page == "AI Ticket Classifier":
 
-    st.header("🤖 AI Ticket Category Predictor")
+    st.header("🤖 AI Ticket Classifier")
+
+    st.info("AI Ticket Classifier will be added in Part 4.")
+
+# ==========================================================
+# DATASET EXPLORER
+# ==========================================================
+
+elif page == "Dataset Explorer":
+
+    st.header("🔍 Dataset Explorer")
+
+    st.info("Dataset Explorer will be added in Part 5.")
+
+# ==========================================================
+# ABOUT PROJECT
+# ==========================================================
+
+elif page == "About Project":
+
+    st.header("ℹ️ About Project")
 
     st.write("""
-Enter a customer complaint below. This application uses the best-performing
-Random Forest Classifier trained on customer support tickets to predict
-the most likely ticket category.
+### AI Customer Support Log Analyzer
+
+This project was developed as part of a **PGDBA Business Analytics Capstone Project**.
+
+**Objective**
+
+To analyze customer support tickets, generate business insights,
+and automatically classify customer complaints using NLP
+and Machine Learning.
+
+**Machine Learning Model**
+
+- Random Forest Classifier
+
+**Tools Used**
+
+- Python
+- Pandas
+- Scikit-learn
+- NLP
+- Plotly
+- Streamlit
+
 """)
-
-    # --------------------------------------------------
-    # USER INPUT
-    # --------------------------------------------------
-
-    user_text = st.text_area(
-        "Enter Customer Complaint",
-        height=180,
-        placeholder="Example: My laptop battery drains within 30 minutes after charging."
-    )
-
-    # --------------------------------------------------
-    # PREDICT BUTTON
-    # --------------------------------------------------
-
-if st.button("Predict Ticket Category"):
-
-    if user_text.strip() == "":
-
-        st.warning("Please enter a customer complaint.")
-
-    else:
-
-        # Vectorize text
-        text_vector = vectorizer.transform([user_text])
-
-        # Predict category (encoded)
-        prediction = model.predict(text_vector)[0]
-
-        # Convert encoded value to actual category
-        category = label_encoder.inverse_transform([prediction])[0]
-
-        st.success(f"### 🎯 Predicted Ticket Category: **{category}**")
-
-        # --------------------------------------------------
-        # CONFIDENCE SCORES
-        # --------------------------------------------------
-
-        if hasattr(model, "predict_proba"):
-
-            probabilities = model.predict_proba(text_vector)[0]
-
-            confidence = probabilities.max() * 100
-
-            st.metric(
-                label="Prediction Confidence",
-                value=f"{confidence:.2f}%"
-            )
-
-            # Show confidence for every category
-            class_names = label_encoder.inverse_transform(model.classes_)
-
-            confidence_df = pd.DataFrame({
-                "Ticket Category": class_names,
-                "Confidence (%)": (probabilities * 100).round(2)
-            })
-
-            confidence_df = confidence_df.sort_values(
-                "Confidence (%)",
-                ascending=False
-            )
-
-            st.subheader("Confidence Across All Categories")
-
-            st.dataframe(
-                confidence_df,
-                use_container_width=True,
-                hide_index=True
-            )
-
-        # --------------------------------------------------
-        # DETECTED KEYWORDS
-        # --------------------------------------------------
-
-        st.subheader("Detected Keywords")
-
-        keywords = [word.strip(".,!?") for word in user_text.lower().split()]
-
-        st.write(", ".join(keywords[:10]))
-
-        # --------------------------------------------------
-        # INTERPRETATION
-        # --------------------------------------------------
-
-        st.subheader("Interpretation")
-
-        st.info(
-            f"""
-**Predicted Category:** {category}
-
-The Random Forest model analyzed the complaint using TF-IDF features and compared
-its wording with historical customer support tickets.
-
-The complaint contains keywords such as:
-
-{', '.join(keywords[:5])}
-
-Based on similar complaints seen during training, the ticket is most likely
-classified as **{category}** with a confidence of **{confidence:.2f}%**.
-
-This helps customer support teams automatically route tickets to the appropriate department,
-reducing response time and improving customer service efficiency.
-"""
-        )
-
-    # --------------------------------------------------
-    # SAMPLE INPUTS
-    # --------------------------------------------------
-
-    st.divider()
-
-    st.subheader("Sample Complaints")
-
-    st.markdown("""
-**Billing Issue**
-- I was charged twice for my order.
-
-**Product Issue**
-- The laptop screen is flickering continuously.
-
-**Delivery Issue**
-- My package has not been delivered even after five days.
-
-**Technical Support**
-- The application crashes every time I log in.
-
-**Refund Request**
-- I cancelled my order but haven't received my refund.
-""")
-
