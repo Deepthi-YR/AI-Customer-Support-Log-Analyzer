@@ -974,27 +974,184 @@ elif page == "About Project":
     st.header("ℹ️ About Project")
 
     st.write("""
-### AI Customer Support Log Analyzer
+## 🎧 AI Customer Support Log Analyzer
 
-This project was developed as part of a **PGDBA Business Analytics Capstone Project**.
+This application was developed as part of the **PGDBA Business Analytics Capstone Project**.
 
-**Objective**
+It combines **Business Analytics**, **Natural Language Processing (NLP)** and **Machine Learning**
+to analyze customer support tickets and automatically predict ticket categories.
+""")
 
-To analyze customer support tickets, generate business insights,
-and automatically classify customer complaints using NLP
-and Machine Learning.
+    st.divider()
 
-**Machine Learning Model**
+    # --------------------------------------------------
+    # PROJECT OBJECTIVE
+    # --------------------------------------------------
 
-- Random Forest Classifier
+    st.subheader("🎯 Project Objective")
 
-**Tools Used**
+    st.write("""
+- Analyze customer support ticket data.
+- Identify business trends and customer service patterns.
+- Generate interactive dashboards for decision making.
+- Automatically classify customer complaints using Machine Learning.
+- Improve ticket routing and customer support efficiency.
+""")
 
-- Python
-- Pandas
-- Scikit-learn
-- NLP
-- Plotly
-- Streamlit
+    st.divider()
+
+    # --------------------------------------------------
+    # DATASET INFORMATION
+    # --------------------------------------------------
+
+    st.subheader("📂 Dataset Information")
+
+    c1, c2 = st.columns(2)
+
+    with c1:
+
+        st.metric("Total Tickets", len(df))
+
+        st.metric("Features", df.shape[1])
+
+    with c2:
+
+        st.metric(
+            "Ticket Categories",
+            df["Ticket Type"].nunique()
+        )
+
+        st.metric(
+            "Support Channels",
+            df["Ticket Channel"].nunique()
+        )
+
+    st.divider()
+
+    # --------------------------------------------------
+    # MACHINE LEARNING
+    # --------------------------------------------------
+
+    st.subheader("🤖 Machine Learning Workflow")
+
+    st.markdown("""
+
+Customer Complaint
+
+⬇️
+
+Text Cleaning
+
+⬇️
+
+TF-IDF Vectorization
+
+⬇️
+
+Random Forest Classifier
+
+⬇️
+
+Predicted Ticket Category
+
+""")
+
+    st.divider()
+
+    # --------------------------------------------------
+    # TECHNOLOGIES
+    # --------------------------------------------------
+
+    st.subheader("🛠 Technologies Used")
+
+    tech1, tech2 = st.columns(2)
+
+    with tech1:
+
+        st.write("🐍 Python")
+
+        st.write("📊 Pandas")
+
+        st.write("🤖 Scikit-learn")
+
+        st.write("📝 Natural Language Processing")
+
+    with tech2:
+
+        st.write("📈 Plotly")
+
+        st.write("🌐 Streamlit")
+
+        st.write("💾 Joblib")
+
+        st.write("📑 Machine Learning")
+
+    st.divider()
+
+    # --------------------------------------------------
+    # PROJECT FEATURES
+    # --------------------------------------------------
+
+    st.subheader("✨ Application Features")
+
+    st.success("""
+
+✔ Dashboard Overview
+
+✔ Business Insights
+
+✔ AI Ticket Category Prediction
+
+✔ Dataset Explorer
+
+✔ Interactive Charts
+
+✔ Download Filtered Dataset
+
+✔ Automatic Ticket Classification
+
+""")
+
+    st.divider()
+
+    # --------------------------------------------------
+    # FUTURE SCOPE
+    # --------------------------------------------------
+
+    st.subheader("🚀 Future Scope")
+
+    st.write("""
+
+- Real-time customer ticket prediction
+
+- Integration with CRM platforms
+
+- Sentiment Analysis
+
+- AI-powered ticket prioritization
+
+- Automatic ticket assignment
+
+- Live monitoring dashboard
+
+""")
+
+    st.divider()
+
+    # --------------------------------------------------
+    # DEVELOPER
+    # --------------------------------------------------
+
+    st.subheader("👩‍💻 Developed By")
+
+    st.info("""
+
+**Deepthi**
+
+PGDBA (Business Analytics)
+
+RV Institute of Management
+
+Capstone Project 2026
 
 """)
