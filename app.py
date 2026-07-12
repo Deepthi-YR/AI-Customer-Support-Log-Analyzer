@@ -658,9 +658,191 @@ elif page == "Business Insights":
 
 elif page == "AI Ticket Classifier":
 
-    st.header("🤖 AI Ticket Classifier")
+    st.header("🤖 AI Ticket Category Predictor")
 
-    st.info("AI Ticket Classifier will be added in Part 4.")
+    st.write("""
+Enter a customer complaint below.
+
+The trained **Random Forest Machine Learning model**
+will predict the most appropriate ticket category.
+""")
+
+    st.divider()
+
+    # --------------------------------------------------
+    # USER INPUT
+    # --------------------------------------------------
+
+    user_text = st.text_area(
+        "Enter Customer Complaint",
+        height=180,
+        placeholder="Example: My laptop battery drains within 30 minutes after charging."
+    )
+
+    # --------------------------------------------------
+    # PREDICT BUTTON
+    # --------------------------------------------------
+
+    if st.button("Predict Ticket Category"):
+
+        if user_text.strip() == "":
+
+            st.warning("Please enter a customer complaint.")
+
+        elif model is None:
+
+            st.error("Model files are not available.")
+
+        else:
+
+            # -----------------------------
+            # Prediction
+            # -----------------------------
+
+            text_vector = vectorizer.transform([user_text])
+
+            prediction = model.predict(text_vector)[0]
+
+            category = label_encoder.inverse_transform([prediction])[0]
+
+            st.success(f"### 🎯 Predicted Ticket Category: **{category}**")
+
+            st.divider()
+
+            # -----------------------------
+            # Confidence
+            # -----------------------------
+
+            if hasattr(model, "predict_proba"):
+
+                probabilities = model.predict_proba(text_vector)[0]
+
+                confidence = probabilities.max() * 100
+
+                st.metric(
+                    "Prediction Confidence",
+                    f"{confidence:.2f}%"
+                )
+
+                class_names = label_encoder.inverse_transform(model.classes_)
+
+                confidence_df = pd.DataFrame({
+
+                    "Ticket Category": class_names,
+
+                    "Confidence (%)":
+                    (probabilities * 100).round(2)
+
+                })
+
+                confidence_df = confidence_df.sort_values(
+
+                    "Confidence (%)",
+
+                    ascending=False
+
+                )
+
+                st.subheader("Confidence for All Categories")
+
+                st.dataframe(
+
+                    confidence_df,
+
+                    hide_index=True,
+
+                    use_container_width=True
+
+                )
+
+            st.divider()
+
+            # -----------------------------
+            # Keywords
+            # -----------------------------
+
+            st.subheader("Detected Keywords")
+
+            keywords = [
+
+                word.strip(".,!?")
+
+                for word in user_text.lower().split()
+
+                if len(word) > 2
+
+            ]
+
+            st.write(", ".join(keywords[:10]))
+
+            st.divider()
+
+            # -----------------------------
+            # Interpretation
+            # -----------------------------
+
+            st.subheader("Prediction Interpretation")
+
+            st.info(f"""
+
+**Predicted Category**
+
+{category}
+
+The complaint was cleaned and transformed using
+**TF-IDF Vectorization**.
+
+The Random Forest classifier compared the complaint
+with previously learned customer support tickets.
+
+Based on similar complaints, the ticket is classified
+as **{category}**.
+
+Prediction Confidence:
+
+**{confidence:.2f}%**
+
+""")
+
+    st.divider()
+
+    # --------------------------------------------------
+    # SAMPLE COMPLAINTS
+    # --------------------------------------------------
+
+    st.subheader("Sample Complaints")
+
+    st.markdown("""
+
+**Billing Issue**
+
+• I was charged twice for my order.
+
+---
+
+**Delivery Issue**
+
+• My package has not arrived yet.
+
+---
+
+**Technical Support**
+
+• The application crashes whenever I log in.
+
+---
+
+**Product Issue**
+
+• My laptop screen keeps flickering.
+
+---
+
+**Refund Request**
+
+• I cancelled my order but haven't received my refund.
+
+""")
 
 # ==========================================================
 # DATASET EXPLORER
