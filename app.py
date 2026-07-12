@@ -454,7 +454,203 @@ elif page == "Business Insights":
 
     st.header("📈 Business Insights")
 
-    st.info("Business Insights page will be added in Part 3.")
+    st.write("Analyze customer support trends and derive actionable business insights.")
+
+    st.divider()
+
+    # --------------------------------------------------
+    # FIRST ROW
+    # --------------------------------------------------
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        st.subheader("Ticket Priority")
+
+        priority_df = (
+            df["Ticket Priority"]
+            .value_counts()
+            .reset_index()
+        )
+
+        priority_df.columns = ["Priority", "Count"]
+
+        fig = px.bar(
+            priority_df,
+            x="Priority",
+            y="Count",
+            color="Priority",
+            text="Count"
+        )
+
+        fig.update_traces(textposition="outside")
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col2:
+
+        st.subheader("Ticket Channel")
+
+        channel_df = (
+            df["Ticket Channel"]
+            .value_counts()
+            .reset_index()
+        )
+
+        channel_df.columns = ["Channel", "Count"]
+
+        fig = px.pie(
+            channel_df,
+            names="Channel",
+            values="Count",
+            hole=0.45
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.divider()
+
+    # --------------------------------------------------
+    # SECOND ROW
+    # --------------------------------------------------
+
+    col3, col4 = st.columns(2)
+
+    with col3:
+
+        st.subheader("Top 10 Products with Support Tickets")
+
+        product_df = (
+            df["Product Purchased"]
+            .value_counts()
+            .head(10)
+            .reset_index()
+        )
+
+        product_df.columns = ["Product", "Count"]
+
+        fig = px.bar(
+            product_df,
+            x="Product",
+            y="Count",
+            color="Count",
+            text="Count"
+        )
+
+        fig.update_layout(xaxis_tickangle=-35)
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col4:
+
+        st.subheader("Customer Satisfaction Ratings")
+
+        rating_df = (
+            df["Customer Satisfaction Rating"]
+            .value_counts()
+            .sort_index()
+            .reset_index()
+        )
+
+        rating_df.columns = ["Rating", "Count"]
+
+        fig = px.bar(
+            rating_df,
+            x="Rating",
+            y="Count",
+            color="Rating",
+            text="Count"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.divider()
+
+    # --------------------------------------------------
+    # THIRD ROW
+    # --------------------------------------------------
+
+    col5, col6 = st.columns(2)
+
+    with col5:
+
+        st.subheader("Customer Gender Distribution")
+
+        gender_df = (
+            df["Customer Gender"]
+            .value_counts()
+            .reset_index()
+        )
+
+        gender_df.columns = ["Gender", "Count"]
+
+        fig = px.pie(
+            gender_df,
+            names="Gender",
+            values="Count",
+            hole=0.45
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col6:
+
+        st.subheader("Top 10 Ticket Categories")
+
+        ticket_df = (
+            df["Ticket Type"]
+            .value_counts()
+            .head(10)
+            .reset_index()
+        )
+
+        ticket_df.columns = ["Ticket Type", "Count"]
+
+        fig = px.bar(
+            ticket_df,
+            x="Ticket Type",
+            y="Count",
+            color="Count",
+            text="Count"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.divider()
+
+    # --------------------------------------------------
+    # BUSINESS RECOMMENDATIONS
+    # --------------------------------------------------
+
+    st.subheader("📌 Key Business Insights")
+
+    top_priority = df["Ticket Priority"].mode()[0]
+    top_channel = df["Ticket Channel"].mode()[0]
+    top_product = df["Product Purchased"].mode()[0]
+    top_ticket = df["Ticket Type"].mode()[0]
+
+    st.success(f"""
+### Summary
+
+• **Most common ticket priority:** {top_priority}
+
+• **Most frequently used support channel:** {top_channel}
+
+• **Product receiving the highest number of support tickets:** {top_product}
+
+• **Most common ticket category:** {top_ticket}
+
+### Recommendations
+
+✅ Prioritize resources for **{top_ticket}** tickets.
+
+✅ Improve customer support through the **{top_channel}** channel.
+
+✅ Review quality and customer feedback for **{top_product}**.
+
+✅ Monitor **{top_priority}** priority tickets to improve response efficiency.
+""")
 
 # ==========================================================
 # AI TICKET CLASSIFIER
