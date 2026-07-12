@@ -6,6 +6,7 @@
 
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 import joblib
 import os
 
@@ -293,7 +294,157 @@ elif page == "Dashboard":
 
     st.header("📊 Dashboard")
 
-    st.info("Dashboard page will be added in Part 2.")
+    st.write("Monitor key customer support metrics and ticket trends.")
+
+    st.divider()
+
+    # --------------------------------------------------
+    # KPI CARDS
+    # --------------------------------------------------
+
+    k1, k2, k3, k4 = st.columns(4)
+
+    k1.metric("Total Tickets", total_tickets)
+
+    k2.metric("Closed Tickets", closed_tickets)
+
+    k3.metric("Open Tickets", open_tickets)
+
+    k4.metric("Average Rating", avg_rating)
+
+    st.divider()
+
+    # --------------------------------------------------
+    # FIRST ROW
+    # --------------------------------------------------
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        st.subheader("Ticket Status Distribution")
+
+        status_df = (
+            df["Ticket Status"]
+            .value_counts()
+            .reset_index()
+        )
+
+        status_df.columns = ["Status", "Count"]
+
+        fig = px.pie(
+            status_df,
+            names="Status",
+            values="Count",
+            hole=0.45
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col2:
+
+        st.subheader("Ticket Type Distribution")
+
+        ticket_df = (
+            df["Ticket Type"]
+            .value_counts()
+            .reset_index()
+        )
+
+        ticket_df.columns = ["Ticket Type", "Count"]
+
+        fig = px.bar(
+            ticket_df,
+            x="Ticket Type",
+            y="Count",
+            color="Ticket Type",
+            text="Count"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.divider()
+
+    # --------------------------------------------------
+    # SECOND ROW
+    # --------------------------------------------------
+
+    col3, col4 = st.columns(2)
+
+    with col3:
+
+        st.subheader("Ticket Priority")
+
+        priority_df = (
+            df["Ticket Priority"]
+            .value_counts()
+            .reset_index()
+        )
+
+        priority_df.columns = ["Priority", "Count"]
+
+        fig = px.bar(
+            priority_df,
+            x="Priority",
+            y="Count",
+            color="Priority",
+            text="Count"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col4:
+
+        st.subheader("Ticket Channel")
+
+        channel_df = (
+            df["Ticket Channel"]
+            .value_counts()
+            .reset_index()
+        )
+
+        channel_df.columns = ["Channel", "Count"]
+
+        fig = px.pie(
+            channel_df,
+            names="Channel",
+            values="Count",
+            hole=0.45
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.divider()
+
+    # --------------------------------------------------
+    # MONTHLY TREND
+    # --------------------------------------------------
+
+    st.subheader("Monthly Ticket Trend")
+
+    monthly_df = df.copy()
+
+    monthly_df["Month"] = (
+        monthly_df["Date of Purchase"]
+        .dt.to_period("M")
+        .astype(str)
+    )
+
+    monthly = (
+        monthly_df
+        .groupby("Month")
+        .size()
+        .reset_index(name="Tickets")
+    )
+
+    fig = px.line(
+        monthly,
+        x="Month",
+        y="Tickets",
+        markers=True
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
 # ==========================================================
 # BUSINESS INSIGHTS
