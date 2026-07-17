@@ -1,237 +1,197 @@
 # ==========================================================
 # AI CUSTOMER SUPPORT LOG ANALYZER
-# Streamlit Application
+# PGDBA CAPSTONE PROJECT
 # ==========================================================
 
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import joblib
+import numpy as np
 import plotly.express as px
+import plotly.graph_objects as go
+import joblib
 
 # ----------------------------------------------------------
-# Page Configuration
+# PAGE CONFIG
 # ----------------------------------------------------------
 
 st.set_page_config(
     page_title="AI Customer Support Log Analyzer",
     page_icon="🎧",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # ----------------------------------------------------------
-# Load Data
+# CUSTOM CSS
+# ----------------------------------------------------------
+
+st.markdown("""
+<style>
+
+.main{
+    background-color:#F8F9FA;
+}
+
+.metric-container{
+    background:#ffffff;
+    padding:15px;
+    border-radius:12px;
+    box-shadow:0px 3px 8px rgba(0,0,0,0.08);
+}
+
+h1{
+    color:#0E4C92;
+}
+
+h2{
+    color:#0E4C92;
+}
+
+footer{
+    visibility:hidden;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ----------------------------------------------------------
+# LOAD DATA
 # ----------------------------------------------------------
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("customer_support_cleaned.xls")
+
+    df = pd.read_csv("customer_support_cleaned.xls")
+
+    return df
 
 df = load_data()
 
-dashboard_df = pd.read_csv("dashboard_data.xls")
-business_df = pd.read_csv("business_summary.xls")
-product_df = pd.read_csv("product_summary.xls")
-
 # ----------------------------------------------------------
-# Load ML Model
+# LOAD ML MODEL
 # ----------------------------------------------------------
 
 @st.cache_resource
 def load_model():
+
     model = joblib.load("best_model.joblib")
     vectorizer = joblib.load("tfidf_vectorizer.pkl")
+
     return model, vectorizer
 
 model, vectorizer = load_model()
 
 # ----------------------------------------------------------
-# Sidebar
+# SIDEBAR
 # ----------------------------------------------------------
 
-st.sidebar.title("🎧 AI Customer Support")
+st.sidebar.image(
+    "https://img.icons8.com/color/96/customer-support.png",
+    width=90
+)
+
+st.sidebar.title("AI Customer Support")
 
 page = st.sidebar.radio(
+
     "Navigation",
+
     [
+
         "🏠 Home",
+
         "📊 Dashboard",
+
         "📈 Business Insights",
+
         "🤖 AI Ticket Predictor",
+
+        "😊 Sentiment Analysis",
+
         "📂 Data Explorer",
+
         "ℹ️ About"
+
     ]
+
 )
 
 # ==========================================================
-# HOME
+# HOME PAGE
 # ==========================================================
 
 if page == "🏠 Home":
 
     st.title("🎧 AI Customer Support Log Analyzer")
 
-    st.markdown("""
-    ### Project Overview
+    st.markdown("---")
 
-    This application analyzes customer support tickets using
-    Business Analytics and Machine Learning.
+    col1, col2 = st.columns([2,1])
 
-    ### Features
+    with col1:
 
-    - 📊 Business Dashboard
-    - 📈 Customer Support Insights
-    - 🤖 AI Ticket Category Prediction
-    - 📂 Interactive Data Explorer
-    - 📋 KPI Monitoring
+        st.markdown("""
+### 📌 Project Objective
 
-    ### Machine Learning Model
+This project analyzes customer support tickets using Business Analytics
+and Machine Learning.
 
-    ✔ XGBoost Classifier
+The application enables businesses to:
 
-    ### Technologies Used
+- Monitor customer support KPIs
+- Analyze ticket categories
+- Track customer satisfaction
+- Identify root causes
+- Predict ticket categories using AI
+- Generate business insights
 
-    - Python
-    - Streamlit
-    - Pandas
-    - Scikit-learn
-    - XGBoost
-    - TF-IDF
-    """)
+---
+### 🛠 Technologies Used
 
-    st.success("Project Developed as part of PGDBA Capstone")
+- Python
+- Streamlit
+- Pandas
+- Plotly
+- Scikit-Learn
+- TF-IDF
+- XGBoost
+- Machine Learning
 
-# ==========================================================
-# DASHBOARD
-# ==========================================================
-if page == "Dashboard":
+---
+### 🤖 Machine Learning
 
-    st.title("📊 Customer Support Dashboard")
-    st.markdown("Business overview of customer support operations")
+**Model Used**
 
-# ------------------------------------------------------
-# KPI CARDS
-# ------------------------------------------------------
+✔ XGBoost Classifier
 
-    total_tickets = len(df)
-    open_tickets = (df["Ticket Status"] == "Open").sum()
-    closed_tickets = (df["Ticket Status"] == "Closed").sum()
+The model predicts customer support ticket categories
+from customer ticket descriptions.
 
-    avg_rating = df["Customer Satisfaction Rating"].mean()
+""")
 
-    if pd.isna(avg_rating):
-        avg_rating = 0
-
-    col1, col2, col3, col4 = st.columns(4)
-
-    col1.metric(
-        "Total Tickets",
-        f"{total_tickets:,}"
-    )
-
-    col2.metric(
-        "Open Tickets",
-        f"{open_tickets:,}"
-    )
-
-    col3.metric(
-        "Closed Tickets",
-        f"{closed_tickets:,}"
-    )
-
-    col4.metric(
-        "Avg Customer Rating",
-        f"{avg_rating:.2f}"
-    )
-
-    st.divider()
-
-#ticket type
     with col2:
 
-        st.subheader("Ticket Type")
+        st.info("""
+### Project Summary
 
-        type_counts = (
-            df["Ticket Type"]
-            .value_counts()
-        )
+Dataset Size
 
-        fig = px.bar(
-            x=type_counts.index,
-            y=type_counts.values,
-            labels={
-                "x":"Ticket Type",
-                "y":"Count"
-            },
-            title="Tickets by Category"
-        )
+✔ 8,469 Tickets
 
-        st.plotly_chart(
-            fig,
-            use_container_width=True
-        )
+Machine Learning
 
-#priority & support channel
-    st.divider()
+✔ XGBoost
 
-    col3, col4 = st.columns(2)
+Deployment
 
-#ticket priority
-    with col3:
+✔ Streamlit Cloud
 
-        st.subheader("Ticket Priority")
+Course
 
-        priority_counts = (
-            df["Ticket Priority"]
-            .value_counts()
-        )
+PGDBA Capstone Project
 
-        fig = px.bar(
-            priority_counts,
-            x=priority_counts.index,
-            y=priority_counts.values,
-            color=priority_counts.index,
-            labels={
-                "x":"Priority",
-                "y":"Tickets"
-            },
-            title="Priority Distribution"
-        )
+""")
 
-        st.plotly_chart(
-            fig,
-            use_container_width=True
-        )
+    st.markdown("---")
 
-#support channel
-    with col4:
-
-        st.subheader("Support Channel")
-
-        channel_counts = (
-            df["Ticket Channel"]
-            .value_counts()
-        )
-
-        fig = px.pie(
-            values=channel_counts.values,
-            names=channel_counts.index,
-            title="Support Channels"
-        )
-
-        st.plotly_chart(
-            fig,
-            use_container_width=True
-        )
-
-#display dataset
-    st.divider()
-
-    st.subheader("Customer Support Dataset")
-
-    st.dataframe(
-        df.head(20),
-        use_container_width=True
-    )
-
+    st.success("✅ AI Customer Support Log Analyzer successfully loaded.")
