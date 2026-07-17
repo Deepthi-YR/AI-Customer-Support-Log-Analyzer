@@ -389,10 +389,10 @@ elif page == "📊 Dashboard":
 # BUSINESS INSIGHTS
 # ==========================================================
 
-    elif page == "📈 Business Insights":
+elif page == "📈 Business Insights":
     
-        st.title("📈 Business Insights")
-        st.markdown("### Operational Performance & Customer Insights")
+    st.title("📈 Business Insights")
+    st.markdown("### Operational Performance & Customer Insights")
 
     # ------------------------------------------------------
     # KPI SUMMARY
