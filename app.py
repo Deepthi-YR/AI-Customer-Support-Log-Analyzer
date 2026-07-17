@@ -31,7 +31,7 @@ df = load_data()
 
 dashboard_df = pd.read_csv("dashboard_data.xls")
 business_df = pd.read_csv("business_summary.xls")
-product_df = pd.read_csv("product_summary.xls")
+product_df = pd.read_xls("product_summary.xls")
 
 # ----------------------------------------------------------
 # Load ML Model
