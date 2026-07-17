@@ -617,7 +617,6 @@ elif page == "🤖 AI Ticket Predictor":
                 prediction = model.predict(text_vector)[0]
 
                 st.success(f"✅ Predicted Ticket Category: **{prediction}**")
-                st.write(model.classes_)
 
                 # ---------------------------------------------------
                 # Prediction Confidence & Top Predictions
@@ -628,8 +627,8 @@ elif page == "🤖 AI Ticket Predictor":
                     prediction_num = model.predict(text_vector)[0]
 
                     prediction = label_encoder.inverse_transform([prediction_num])[0]
-
-                    st.write(repr(prediction))
+                    
+                    st.success(f"✅ Predicted Ticket Category: **{prediction}**")
 
                     confidence = np.max(probability) * 100
 
