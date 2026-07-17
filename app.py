@@ -384,3 +384,176 @@ elif page == "📊 Dashboard":
         df.head(15),
         use_container_width=True
     )
+
+# ==========================================================
+# BUSINESS INSIGHTS
+# ==========================================================
+
+elif page == "📈 Business Insights":
+
+    st.title("📈 Business Insights")
+    st.markdown("### Operational Performance & Customer Insights")
+
+    # ------------------------------------------------------
+    # KPI SUMMARY
+    # ------------------------------------------------------
+
+    avg_response = df["First Response Time"].dropna().mean()
+    avg_resolution = df["Time to Resolution"].dropna().mean()
+    avg_rating = df["Customer Satisfaction Rating"].dropna().mean()
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric(
+        "Avg First Response",
+        f"{avg_response:.2f} hrs" if pd.notna(avg_response) else "N/A"
+    )
+
+    col2.metric(
+        "Avg Resolution Time",
+        f"{avg_resolution:.2f} hrs" if pd.notna(avg_resolution) else "N/A"
+    )
+
+    col3.metric(
+        "Customer Satisfaction",
+        f"{avg_rating:.2f}/5" if pd.notna(avg_rating) else "N/A"
+    )
+
+    st.markdown("---")
+
+    # ------------------------------------------------------
+    # FIRST RESPONSE TIME
+    # ------------------------------------------------------
+
+    if df["First Response Time"].notna().sum() > 0:
+
+        st.subheader("First Response Time Distribution")
+
+        fig = px.histogram(
+            df,
+            x="First Response Time",
+            nbins=20,
+            title="Distribution of First Response Time"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    # ------------------------------------------------------
+    # RESOLUTION TIME
+    # ------------------------------------------------------
+
+    if df["Time to Resolution"].notna().sum() > 0:
+
+        st.subheader("Resolution Time Distribution")
+
+        fig = px.histogram(
+            df,
+            x="Time to Resolution",
+            nbins=20,
+            title="Distribution of Resolution Time"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+
+    # ------------------------------------------------------
+    # CUSTOMER SATISFACTION
+    # ------------------------------------------------------
+
+    if df["Customer Satisfaction Rating"].notna().sum() > 0:
+
+        st.subheader("Customer Satisfaction Ratings")
+
+        rating = (
+            df["Customer Satisfaction Rating"]
+            .value_counts()
+            .sort_index()
+            .reset_index()
+        )
+
+        rating.columns = ["Rating", "Count"]
+
+        fig = px.bar(
+            rating,
+            x="Rating",
+            y="Count",
+            text="Count",
+            color="Rating"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+
+    # ------------------------------------------------------
+    # PRODUCT-WISE ISSUES
+    # ------------------------------------------------------
+
+    st.subheader("Top Products with Support Tickets")
+
+    product = (
+        df["Product Purchased"]
+        .value_counts()
+        .head(10)
+        .reset_index()
+    )
+
+    product.columns = ["Product", "Tickets"]
+
+    fig = px.bar(
+        product,
+        x="Product",
+        y="Tickets",
+        text="Tickets",
+        color="Tickets"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+
+    # ------------------------------------------------------
+    # ROOT CAUSE ANALYSIS
+    # ------------------------------------------------------
+
+    st.subheader("Root Cause Analysis")
+
+    issue = (
+        df["Ticket Type"]
+        .value_counts()
+        .reset_index()
+    )
+
+    issue.columns = ["Issue Type", "Count"]
+
+    fig = px.pie(
+        issue,
+        names="Issue Type",
+        values="Count",
+        hole=0.45
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+
+    # ------------------------------------------------------
+    # BUSINESS RECOMMENDATIONS
+    # ------------------------------------------------------
+
+    st.subheader("📌 Key Business Recommendations")
+
+    st.success("""
+    ✔ Improve response time for high-priority tickets.
+
+    ✔ Increase staffing during peak support hours.
+
+    ✔ Focus on products generating the highest number of complaints.
+
+    ✔ Automate repetitive customer queries using AI chatbots.
+
+    ✔ Monitor customer satisfaction regularly and investigate low ratings.
+
+    ✔ Use ticket category prediction to automatically route tickets to the correct support team.
+    """)
