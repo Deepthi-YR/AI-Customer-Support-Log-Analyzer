@@ -667,5 +667,5 @@ elif page == "🤖 AI Ticket Predictor":
                 
                 st.success(action)
                 
-                except Exception as e:
-                    st.error(f"Prediction Error: {e}")
+            except Exception as e:
+                st.error(f"Prediction Error: {e}")
