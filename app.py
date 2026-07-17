@@ -143,7 +143,7 @@ if page == "Dashboard":
 
 if pd.isna(avg_rating):
     avg_rating = 0
-
+    )
     st.divider()
 
 #Ticket status
