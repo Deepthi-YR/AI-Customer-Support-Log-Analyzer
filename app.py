@@ -627,38 +627,44 @@ elif page == "🤖 AI Ticket Predictor":
                     )
 
                 st.markdown("---")
-
+    
+    # -------------------------------
+    # Suggested Action
+    # -------------------------------
+    
                 st.subheader("Suggested Action")
-
-                suggestions = {
-
+                
+                actions = {
                     "Technical Issue":
-                        "Assign to Technical Support Team.",
-
+                        "Assign to Technical Support Team. Investigate logs and troubleshoot immediately.",
+                
+                    "Billing Inquiry":
+                        "Forward to Billing Department for payment verification.",
+                
                     "Refund Request":
-                        "Forward to Billing & Refund Team.",
-
+                        "Create refund ticket and verify eligibility before processing.",
+                
                     "Product Inquiry":
-                        "Route to Product Support Team.",
-
-                    "Shipping":
-                        "Forward to Logistics Team.",
-
-                    "Billing":
-                        "Assign to Finance Team.",
-
-                    "Cancellation":
-                        "Forward to Customer Success Team."
-
+                        "Share product documentation or connect customer with Sales Team.",
+                
+                    "Account Access":
+                        "Assist customer with password reset or account verification.",
+                
+                    "Cancellation Request":
+                        "Process cancellation request and send confirmation email.",
+                
+                    "Shipping Issue":
+                        "Contact Logistics Team and provide shipment status update.",
+                
+                    "General Inquiry":
+                        "Route to Customer Support Team for further assistance."
                 }
-
-                if prediction in suggestions:
-                    st.info(suggestions[prediction])
-                else:
-                    st.info("Route to the General Customer Support Team.")
-
-            except Exception as e:
-
-                st.error(f"Prediction Error: {e}")
-
-
+                
+                action = actions.get(prediction,
+                                     "Route to Customer Support Team.")
+                
+                st.success(action)
+                
+                                st.error(f"Prediction Error: {e}")
+                
+                
