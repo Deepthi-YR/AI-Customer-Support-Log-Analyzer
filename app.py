@@ -626,7 +626,11 @@ elif page == "🤖 AI Ticket Predictor":
                 # ---------------------------------------------------
 
                 if hasattr(model, "predict_proba"):
+
+                    # Get prediction probabilities
+                    probability = model.predict_proba(text_vector)[0]
                 
+                    # Confidence Score
                     confidence = np.max(probability) * 100
                 
                     st.metric(
@@ -634,6 +638,7 @@ elif page == "🤖 AI Ticket Predictor":
                         f"{confidence:.2f}%"
                     )
                 
+                    # Top 3 Predictions
                     top3 = np.argsort(probability)[::-1][:3]
                 
                     decoded_labels = label_encoder.inverse_transform(model.classes_[top3])
@@ -645,8 +650,7 @@ elif page == "🤖 AI Ticket Predictor":
                 
                     st.subheader("Top 3 Predictions")
                     st.dataframe(results, use_container_width=True)
-
-
+                
                 # ---------------------------------------------------
                 # Suggested Action
                 # ---------------------------------------------------
@@ -676,8 +680,6 @@ elif page == "🤖 AI Ticket Predictor":
                 )
                 
                 st.success(action)    
-                st.write("Model Classes:", model.classes_)
-                st.write("Label Encoder Classes:", label_encoder.classes_)
 
             except Exception as e:
 
