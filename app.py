@@ -78,6 +78,8 @@ def load_model():
     vectorizer = joblib.load("tfidf_vectorizer.pkl")
     label_encoder = joblib.load("label_encoder.pkl")
 
+    st.write(label_encoder.classes_)
+
     return model, vectorizer
 
 model, vectorizer = load_model()
