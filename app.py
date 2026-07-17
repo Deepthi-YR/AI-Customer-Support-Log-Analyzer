@@ -615,8 +615,10 @@ elif page == "🤖 AI Ticket Predictor":
                 text_vector = vectorizer.transform([user_text])
 
                 # Predict category
-                prediction = model.predict(text_vector)[0]
+                prediction_num = model.predict(text_vector)[0]
 
+                prediction = label_encoder.inverse_transform([prediction_num])[0]
+                
                 st.success(f"✅ Predicted Ticket Category: **{prediction}**")
 
                 # ---------------------------------------------------
@@ -624,9 +626,6 @@ elif page == "🤖 AI Ticket Predictor":
                 # ---------------------------------------------------
 
                 if hasattr(model, "predict_proba"):
-
-                    # Get probabilities
-                    probability = model.predict_proba(text_vector)[0]
                 
                     confidence = np.max(probability) * 100
                 
