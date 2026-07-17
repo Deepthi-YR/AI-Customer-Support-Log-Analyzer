@@ -666,5 +666,3 @@ elif page == "🤖 AI Ticket Predictor":
                 st.success(action)
                 
                 st.error(f"Prediction Error: {e}")
-                
-                
