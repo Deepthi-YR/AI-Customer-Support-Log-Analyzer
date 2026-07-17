@@ -61,6 +61,7 @@ page = st.sidebar.radio(
         "📂 Data Explorer",
         "ℹ️ About"
     ]
+)
 
 # ==========================================================
 # HOME
