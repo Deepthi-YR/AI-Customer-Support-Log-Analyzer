@@ -76,6 +76,7 @@ def load_model():
 
     model = joblib.load("best_model.joblib")
     vectorizer = joblib.load("tfidf_vectorizer.pkl")
+    label_encoder = joblib.load("label_encoder.pkl")
 
     return model, vectorizer
 
@@ -624,7 +625,9 @@ elif page == "🤖 AI Ticket Predictor":
 
                 if hasattr(model, "predict_proba"):
 
-                    probability = model.predict_proba(text_vector)[0]
+                    prediction_num = model.predict(text_vector)[0]
+
+                    prediction = label_encoder.inverse_transform([prediction_num])[0]
 
                     st.write(repr(prediction))
 
@@ -637,12 +640,11 @@ elif page == "🤖 AI Ticket Predictor":
 
                     top3 = np.argsort(probability)[::-1][:3]
 
+                    decoded_labels = label_encoder.inverse_transform(model.classes_[top3])
+
                     results = pd.DataFrame({
-                        "Category": model.classes_[top3],
-                        "Confidence (%)": np.round(
-                            probability[top3] * 100,
-                            2
-                        )
+                        "Category": decoded_labels,
+                        "Confidence (%)": np.round(probability[top3] * 100, 2)
                     })
 
                     st.subheader("Top 3 Predictions")
