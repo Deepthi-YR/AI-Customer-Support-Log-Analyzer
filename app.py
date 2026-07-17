@@ -8,6 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
+import plotly.express as px
 
 # ----------------------------------------------------------
 # Page Configuration
@@ -138,8 +139,10 @@ if page == "Dashboard":
 
     col4.metric(
         "Avg Customer Rating",
-        f"{avg_rating:.2f}"
-    )
+        avg_rating = df["Customer Satisfaction Rating"].mean()
+
+if pd.isna(avg_rating):
+    avg_rating = 0
 
     st.divider()
 
