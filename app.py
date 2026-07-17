@@ -616,6 +616,7 @@ elif page == "🤖 AI Ticket Predictor":
                 prediction = model.predict(text_vector)[0]
 
                 st.success(f"✅ Predicted Ticket Category: **{prediction}**")
+                st.write("Available Categories:", list(model.classes_))
 
                 # ---------------------------------------------------
                 # Prediction Confidence & Top Predictions
@@ -624,6 +625,8 @@ elif page == "🤖 AI Ticket Predictor":
                 if hasattr(model, "predict_proba"):
 
                     probability = model.predict_proba(text_vector)[0]
+
+                    st.write(repr(prediction))
 
                     confidence = np.max(probability) * 100
 
