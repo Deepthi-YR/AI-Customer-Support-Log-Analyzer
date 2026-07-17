@@ -621,6 +621,9 @@ elif page == "🤖 AI Ticket Predictor":
                 
                 st.success(f"✅ Predicted Ticket Category: **{prediction}**")
 
+                st.write("Prediction Number:", prediction_num)
+                st.write("Prediction Label:", prediction)
+
                 # ---------------------------------------------------
                 # Prediction Confidence & Top Predictions
                 # ---------------------------------------------------
