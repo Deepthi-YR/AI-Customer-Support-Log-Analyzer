@@ -625,32 +625,28 @@ elif page == "🤖 AI Ticket Predictor":
 
                 if hasattr(model, "predict_proba"):
 
-                    prediction_num = model.predict(text_vector)[0]
-
-                    prediction = label_encoder.inverse_transform([prediction_num])[0]
-                    
-                    st.success(f"✅ Predicted Ticket Category: **{prediction}**")
-
+                    # Get probabilities
+                    probability = model.predict_proba(text_vector)[0]
+                
                     confidence = np.max(probability) * 100
-
+                
                     st.metric(
                         "Prediction Confidence",
                         f"{confidence:.2f}%"
                     )
-
+                
                     top3 = np.argsort(probability)[::-1][:3]
-
+                
                     decoded_labels = label_encoder.inverse_transform(model.classes_[top3])
-
+                
                     results = pd.DataFrame({
                         "Category": decoded_labels,
                         "Confidence (%)": np.round(probability[top3] * 100, 2)
                     })
-
+                
                     st.subheader("Top 3 Predictions")
                     st.dataframe(results, use_container_width=True)
 
-                st.markdown("---")
 
                 # ---------------------------------------------------
                 # Suggested Action
