@@ -628,10 +628,10 @@ elif page == "🤖 AI Ticket Predictor":
 
                 st.markdown("---")
     
-    # -------------------------------
-    # Suggested Action
-    # -------------------------------
-    
+# -------------------------------
+# Suggested Action
+# -------------------------------
+
                 st.subheader("Suggested Action")
                 
                 actions = {
@@ -660,9 +660,12 @@ elif page == "🤖 AI Ticket Predictor":
                         "Route to Customer Support Team for further assistance."
                 }
                 
-                action = actions.get(prediction,
-                                     "Route to Customer Support Team.")
+                action = actions.get(
+                    prediction,
+                    "Route to Customer Support Team."
+                )
                 
                 st.success(action)
                 
-                st.error(f"Prediction Error: {e}")
+                except Exception as e:
+                    st.error(f"Prediction Error: {e}")
