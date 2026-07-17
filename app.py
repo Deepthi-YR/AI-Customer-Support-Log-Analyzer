@@ -655,37 +655,28 @@ elif page == "🤖 AI Ticket Predictor":
                 st.subheader("Suggested Action")
 
                 actions = {
-                    "Technical Issue":
+                    "Technical issue":
                         "🔧 Assign to Technical Support Team. Investigate the issue immediately.",
-
-                    "Billing Inquiry":
+                
+                    "Billing inquiry":
                         "💳 Forward to Billing Team for payment verification.",
-
-                    "Refund Request":
-                        "💰 Verify refund eligibility and initiate refund process.",
-
-                    "Product Inquiry":
-                        "📦 Share product information or connect with Sales Team.",
-
-                    "Account Access":
-                        "🔐 Help customer reset password or verify account.",
-
-                    "Cancellation Request":
-                        "❌ Process cancellation request and notify the customer.",
-
-                    "Shipping Issue":
-                        "🚚 Contact Logistics Team and provide shipment update.",
-
-                    "General Inquiry":
-                        "📞 Route to General Customer Support Team."
+                
+                    "Refund request":
+                        "💰 Verify refund eligibility and initiate the refund process.",
+                
+                    "Product inquiry":
+                        "📦 Share product details or connect the customer with the Sales Team.",
+                
+                    "Cancellation request":
+                        "❌ Process the cancellation request and send a confirmation email."
                 }
-
+        
                 action = actions.get(
                     prediction,
                     "📞 Route to General Customer Support Team."
                 )
-
-                st.success(action)
+                
+                st.success(action)    
                 st.write("Model Classes:", model.classes_)
                 st.write("Label Encoder Classes:", label_encoder.classes_)
 
