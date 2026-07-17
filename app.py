@@ -394,20 +394,32 @@ elif page == "📈 Business Insights":
     st.title("📈 Business Insights")
     st.markdown("### Operational Performance & Customer Insights")
 
-    # ------------------------------------------------------
-    # KPI SUMMARY
-    # ------------------------------------------------------
+# ------------------------------------------------------
+# KPI SUMMARY
+# ------------------------------------------------------
 
-    avg_rating = df["Customer Satisfaction Rating"].dropna().mean()
+total_tickets = len(df)
 
-    col1 = st.columns(1)
+avg_rating = df["Customer Satisfaction Rating"].dropna().mean()
 
-    col1.metric(
-        "Customer Satisfaction",
-        f"{avg_rating:.2f}/5" if pd.notna(avg_rating) else "N/A"
-    )
+top_issue = df["Ticket Type"].mode()[0]
 
-    st.markdown("---")
+top_product = df["Product Purchased"].mode()[0]
+
+col1, col2, col3, col4 = st.columns(4)
+
+col1.metric("Total Tickets", total_tickets)
+
+col2.metric(
+    "Avg Rating",
+    f"{avg_rating:.2f}/5" if pd.notna(avg_rating) else "N/A"
+)
+
+col3.metric("Top Issue", top_issue)
+
+col4.metric("Most Reported Product", top_product)
+
+st.markdown("---")
 
 
     # ------------------------------------------------------
@@ -466,6 +478,33 @@ elif page == "📈 Business Insights":
 
     st.markdown("---")
 
+
+    # ------------------------------------------------------
+    # TICKET PRIORITY
+    # ------------------------------------------------------
+    
+    st.subheader("Ticket Priority Distribution")
+    
+    priority = (
+        df["Ticket Priority"]
+        .value_counts()
+        .reset_index()
+    )
+    
+    priority.columns = ["Priority", "Tickets"]
+    
+    fig = px.bar(
+        priority,
+        x="Priority",
+        y="Tickets",
+        text="Tickets",
+        color="Priority"
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    st.markdown("---")
+
     # ------------------------------------------------------
     # ROOT CAUSE ANALYSIS
     # ------------------------------------------------------
@@ -492,21 +531,51 @@ elif page == "📈 Business Insights":
     st.markdown("---")
 
     # ------------------------------------------------------
+    # TICKET TREND
+    # ------------------------------------------------------
+    
+    st.subheader("Ticket Trend")
+    
+    trend = df.copy()
+    
+    trend["Date of Purchase"] = pd.to_datetime(
+        trend["Date of Purchase"],
+        errors="coerce"
+    )
+    
+    trend = (
+        trend.groupby("Date of Purchase")
+        .size()
+        .reset_index(name="Tickets")
+    )
+    
+    fig = px.line(
+        trend,
+        x="Date of Purchase",
+        y="Tickets",
+        markers=True
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    st.markdown("---")
+
+    # ------------------------------------------------------
     # BUSINESS RECOMMENDATIONS
     # ------------------------------------------------------
 
     st.subheader("📌 Key Business Recommendations")
-
+    
     st.success("""
-    ✔ Improve response time for high-priority tickets.
-
-    ✔ Increase staffing during peak support hours.
-
-    ✔ Focus on products generating the highest number of complaints.
-
-    ✔ Automate repetitive customer queries using AI chatbots.
-
-    ✔ Monitor customer satisfaction regularly and investigate low ratings.
-
-    ✔ Use ticket category prediction to automatically route tickets to the correct support team.
+    ✔ Technical issues represent the largest proportion of customer support tickets.
+    
+    ✔ Prioritize High Priority tickets for faster resolution.
+    
+    ✔ Focus quality improvement efforts on products receiving the highest complaint volumes.
+    
+    ✔ Monitor Customer Satisfaction Ratings regularly to improve service quality.
+    
+    ✔ Deploy AI-based ticket classification to automate ticket routing and reduce manual effort.
+    
+    ✔ Continuously analyze recurring ticket categories to identify product and service improvement opportunities.
     """)
