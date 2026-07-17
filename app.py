@@ -114,38 +114,38 @@ if page == "Dashboard":
 # KPI CARDS
 # ------------------------------------------------------
 
-total_tickets = len(df)
-open_tickets = (df["Ticket Status"] == "Open").sum()
-closed_tickets = (df["Ticket Status"] == "Closed").sum()
+    total_tickets = len(df)
+    open_tickets = (df["Ticket Status"] == "Open").sum()
+    closed_tickets = (df["Ticket Status"] == "Closed").sum()
 
-avg_rating = df["Customer Satisfaction Rating"].mean()
+    avg_rating = df["Customer Satisfaction Rating"].mean()
 
-if pd.isna(avg_rating):
-    avg_rating = 0
+    if pd.isna(avg_rating):
+        avg_rating = 0
 
-col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4 = st.columns(4)
 
-col1.metric(
-    "Total Tickets",
-    f"{total_tickets:,}"
-)
+    col1.metric(
+        "Total Tickets",
+        f"{total_tickets:,}"
+    )
 
-col2.metric(
-    "Open Tickets",
-    f"{open_tickets:,}"
-)
+    col2.metric(
+        "Open Tickets",
+        f"{open_tickets:,}"
+    )
 
-col3.metric(
-    "Closed Tickets",
-    f"{closed_tickets:,}"
-)
+    col3.metric(
+        "Closed Tickets",
+        f"{closed_tickets:,}"
+    )
 
-col4.metric(
-    "Avg Customer Rating",
-    f"{avg_rating:.2f}"
-)
+    col4.metric(
+        "Avg Customer Rating",
+        f"{avg_rating:.2f}"
+    )
 
-st.divider()
+    st.divider()
 
 #ticket type
     with col2:
