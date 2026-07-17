@@ -389,37 +389,37 @@ elif page == "📊 Dashboard":
 # BUSINESS INSIGHTS
 # ==========================================================
 
-elif page == "📈 Business Insights":
+    elif page == "📈 Business Insights":
+    
+        st.title("📈 Business Insights")
+        st.markdown("### Operational Performance & Customer Insights")
 
-    st.title("📈 Business Insights")
-    st.markdown("### Operational Performance & Customer Insights")
+    # ------------------------------------------------------
+    # KPI SUMMARY
+    # ------------------------------------------------------
 
-# ------------------------------------------------------
-# KPI SUMMARY
-# ------------------------------------------------------
-
-total_tickets = len(df)
-
-avg_rating = df["Customer Satisfaction Rating"].dropna().mean()
-
-top_issue = df["Ticket Type"].mode()[0]
-
-top_product = df["Product Purchased"].mode()[0]
-
-col1, col2, col3, col4 = st.columns(4)
-
-col1.metric("Total Tickets", total_tickets)
-
-col2.metric(
-    "Avg Rating",
-    f"{avg_rating:.2f}/5" if pd.notna(avg_rating) else "N/A"
-)
-
-col3.metric("Top Issue", top_issue)
-
-col4.metric("Most Reported Product", top_product)
-
-st.markdown("---")
+    total_tickets = len(df)
+    
+    avg_rating = df["Customer Satisfaction Rating"].dropna().mean()
+    
+    top_issue = df["Ticket Type"].mode()[0]
+    
+    top_product = df["Product Purchased"].mode()[0]
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    col1.metric("Total Tickets", total_tickets)
+    
+    col2.metric(
+        "Avg Rating",
+        f"{avg_rating:.2f}/5" if pd.notna(avg_rating) else "N/A"
+    )
+    
+    col3.metric("Top Issue", top_issue)
+    
+    col4.metric("Most Reported Product", top_product)
+    
+    st.markdown("---")
 
 
     # ------------------------------------------------------
