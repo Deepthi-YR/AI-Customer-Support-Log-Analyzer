@@ -195,3 +195,192 @@ PGDBA Capstone Project
     st.markdown("---")
 
     st.success("✅ AI Customer Support Log Analyzer successfully loaded.")
+
+# ==========================================================
+# DASHBOARD
+# ==========================================================
+
+elif page == "📊 Dashboard":
+
+    st.title("📊 Customer Support Dashboard")
+    st.markdown("### Business Performance Overview")
+
+    # ------------------------------------------------------
+    # KPI CARDS
+    # ------------------------------------------------------
+
+    total_tickets = len(df)
+
+    open_tickets = (
+        df["Ticket Status"]
+        .astype(str)
+        .str.lower()
+        .eq("open")
+        .sum()
+    )
+
+    closed_tickets = (
+        df["Ticket Status"]
+        .astype(str)
+        .str.lower()
+        .eq("closed")
+        .sum()
+    )
+
+    avg_rating = df["Customer Satisfaction Rating"].fillna(0).mean()
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    col1.metric("Total Tickets", f"{total_tickets:,}")
+    col2.metric("Open Tickets", open_tickets)
+    col3.metric("Closed Tickets", closed_tickets)
+    col4.metric("Avg Rating", f"{avg_rating:.2f}")
+
+    st.markdown("---")
+
+    # ------------------------------------------------------
+    # FIRST ROW
+    # ------------------------------------------------------
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        st.subheader("Ticket Status")
+
+        status = (
+            df["Ticket Status"]
+            .value_counts()
+            .reset_index()
+        )
+
+        status.columns = ["Status", "Count"]
+
+        fig = px.pie(
+            status,
+            names="Status",
+            values="Count",
+            hole=0.45
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col2:
+
+        st.subheader("Ticket Categories")
+
+        ticket_type = (
+            df["Ticket Type"]
+            .value_counts()
+            .reset_index()
+        )
+
+        ticket_type.columns = ["Type", "Count"]
+
+        fig = px.bar(
+            ticket_type,
+            x="Type",
+            y="Count",
+            text="Count",
+            color="Type"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+
+    # ------------------------------------------------------
+    # SECOND ROW
+    # ------------------------------------------------------
+
+    col3, col4 = st.columns(2)
+
+    with col3:
+
+        st.subheader("Priority Distribution")
+
+        priority = (
+            df["Ticket Priority"]
+            .value_counts()
+            .reset_index()
+        )
+
+        priority.columns = ["Priority", "Count"]
+
+        fig = px.bar(
+            priority,
+            x="Priority",
+            y="Count",
+            color="Priority",
+            text="Count"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col4:
+
+        st.subheader("Support Channels")
+
+        channel = (
+            df["Ticket Channel"]
+            .value_counts()
+            .reset_index()
+        )
+
+        channel.columns = ["Channel", "Count"]
+
+        fig = px.pie(
+            channel,
+            names="Channel",
+            values="Count",
+            hole=0.45
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+
+    # ------------------------------------------------------
+    # THIRD ROW
+    # ------------------------------------------------------
+
+    if "Date of Purchase" in df.columns:
+
+        st.subheader("Ticket Trend")
+
+        trend = df.copy()
+
+        trend["Date of Purchase"] = pd.to_datetime(
+            trend["Date of Purchase"],
+            errors="coerce"
+        )
+
+        trend = (
+            trend
+            .groupby("Date of Purchase")
+            .size()
+            .reset_index(name="Tickets")
+            .sort_values("Date of Purchase")
+        )
+
+        fig = px.line(
+            trend,
+            x="Date of Purchase",
+            y="Tickets",
+            markers=True
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+
+    # ------------------------------------------------------
+    # DATA PREVIEW
+    # ------------------------------------------------------
+
+    st.subheader("Recent Customer Support Tickets")
+
+    st.dataframe(
+        df.head(15),
+        use_container_width=True
+    )
