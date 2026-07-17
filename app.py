@@ -588,7 +588,9 @@ elif page == "📈 Business Insights":
 elif page == "🤖 AI Ticket Predictor":
 
     st.title("🤖 AI Ticket Category Predictor")
-    st.markdown("Predict the category of a customer support ticket using the trained XGBoost model.")
+    st.markdown(
+        "Predict the category of a customer support ticket using the trained XGBoost model."
+    )
 
     st.markdown("---")
 
@@ -602,6 +604,7 @@ elif page == "🤖 AI Ticket Predictor":
 
         if user_text.strip() == "":
             st.warning("⚠ Please enter a customer support ticket.")
+
         else:
 
             try:
@@ -612,12 +615,15 @@ elif page == "🤖 AI Ticket Predictor":
                 # Predict category
                 prediction = model.predict(text_vector)[0]
 
-                st.success(f"### ✅ Predicted Ticket Category: {prediction}")
+                st.success(f"✅ Predicted Ticket Category: **{prediction}**")
 
-                # Confidence Score (only if supported)
+                # ---------------------------------------------------
+                # Prediction Confidence & Top Predictions
+                # ---------------------------------------------------
+
                 if hasattr(model, "predict_proba"):
 
-                    probability = model.predict_proba(text_vector)
+                    probability = model.predict_proba(text_vector)[0]
 
                     confidence = np.max(probability) * 100
 
@@ -626,46 +632,60 @@ elif page == "🤖 AI Ticket Predictor":
                         f"{confidence:.2f}%"
                     )
 
+                    top3 = np.argsort(probability)[::-1][:3]
+
+                    results = pd.DataFrame({
+                        "Category": model.classes_[top3],
+                        "Confidence (%)": np.round(
+                            probability[top3] * 100,
+                            2
+                        )
+                    })
+
+                    st.subheader("Top 3 Predictions")
+                    st.dataframe(results, use_container_width=True)
+
                 st.markdown("---")
-    
-# -------------------------------
-# Suggested Action
-# -------------------------------
+
+                # ---------------------------------------------------
+                # Suggested Action
+                # ---------------------------------------------------
 
                 st.subheader("Suggested Action")
-                
+
                 actions = {
                     "Technical Issue":
-                        "Assign to Technical Support Team. Investigate logs and troubleshoot immediately.",
-                
+                        "🔧 Assign to Technical Support Team. Investigate the issue immediately.",
+
                     "Billing Inquiry":
-                        "Forward to Billing Department for payment verification.",
-                
+                        "💳 Forward to Billing Team for payment verification.",
+
                     "Refund Request":
-                        "Create refund ticket and verify eligibility before processing.",
-                
+                        "💰 Verify refund eligibility and initiate refund process.",
+
                     "Product Inquiry":
-                        "Share product documentation or connect customer with Sales Team.",
-                
+                        "📦 Share product information or connect with Sales Team.",
+
                     "Account Access":
-                        "Assist customer with password reset or account verification.",
-                
+                        "🔐 Help customer reset password or verify account.",
+
                     "Cancellation Request":
-                        "Process cancellation request and send confirmation email.",
-                
+                        "❌ Process cancellation request and notify the customer.",
+
                     "Shipping Issue":
-                        "Contact Logistics Team and provide shipment status update.",
-                
+                        "🚚 Contact Logistics Team and provide shipment update.",
+
                     "General Inquiry":
-                        "Route to Customer Support Team for further assistance."
+                        "📞 Route to General Customer Support Team."
                 }
-                
+
                 action = actions.get(
                     prediction,
-                    "Route to Customer Support Team."
+                    "📞 Route to General Customer Support Team."
                 )
-                
+
                 st.success(action)
-                
+
             except Exception as e:
+
                 st.error(f"Prediction Error: {e}")
