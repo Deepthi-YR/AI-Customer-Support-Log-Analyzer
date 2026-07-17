@@ -141,7 +141,7 @@ if page == "Dashboard":
         "Avg Customer Rating",
         avg_rating = df["Customer Satisfaction Rating"].mean()
 
-if pd.isna(avg_rating):
+if pd.isna(avg_rating)
     avg_rating = 0
     )
     st.divider()
