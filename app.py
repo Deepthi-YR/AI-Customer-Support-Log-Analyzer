@@ -616,7 +616,7 @@ elif page == "🤖 AI Ticket Predictor":
                 prediction = model.predict(text_vector)[0]
 
                 st.success(f"✅ Predicted Ticket Category: **{prediction}**")
-                st.write("Available Categories:", list(model.classes_))
+                st.write(model.classes_)
 
                 # ---------------------------------------------------
                 # Prediction Confidence & Top Predictions
