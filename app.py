@@ -579,3 +579,86 @@ elif page == "📈 Business Insights":
     
     ✔ Continuously analyze recurring ticket categories to identify product and service improvement opportunities.
     """)
+
+
+# ==========================================================
+# AI TICKET PREDICTOR
+# ==========================================================
+
+elif page == "🤖 AI Ticket Predictor":
+
+    st.title("🤖 AI Ticket Category Predictor")
+    st.markdown("Predict the category of a customer support ticket using the trained XGBoost model.")
+
+    st.markdown("---")
+
+    user_text = st.text_area(
+        "Enter Customer Support Ticket",
+        height=180,
+        placeholder="Example:\nI purchased a laptop last week and it keeps shutting down automatically."
+    )
+
+    if st.button("Predict Ticket Category"):
+
+        if user_text.strip() == "":
+            st.warning("⚠ Please enter a customer support ticket.")
+        else:
+
+            try:
+
+                # Convert text using saved TF-IDF vectorizer
+                text_vector = vectorizer.transform([user_text])
+
+                # Predict category
+                prediction = model.predict(text_vector)[0]
+
+                st.success(f"### ✅ Predicted Ticket Category: {prediction}")
+
+                # Confidence Score (only if supported)
+                if hasattr(model, "predict_proba"):
+
+                    probability = model.predict_proba(text_vector)
+
+                    confidence = np.max(probability) * 100
+
+                    st.metric(
+                        "Prediction Confidence",
+                        f"{confidence:.2f}%"
+                    )
+
+                st.markdown("---")
+
+                st.subheader("Suggested Action")
+
+                suggestions = {
+
+                    "Technical Issue":
+                        "Assign to Technical Support Team.",
+
+                    "Refund Request":
+                        "Forward to Billing & Refund Team.",
+
+                    "Product Inquiry":
+                        "Route to Product Support Team.",
+
+                    "Shipping":
+                        "Forward to Logistics Team.",
+
+                    "Billing":
+                        "Assign to Finance Team.",
+
+                    "Cancellation":
+                        "Forward to Customer Success Team."
+
+                }
+
+                if prediction in suggestions:
+                    st.info(suggestions[prediction])
+                else:
+                    st.info("Route to the General Customer Support Team.")
+
+            except Exception as e:
+
+                st.error(f"Prediction Error: {e}")
+
+
