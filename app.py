@@ -78,8 +78,6 @@ def load_model():
     vectorizer = joblib.load("tfidf_vectorizer.pkl")
     label_encoder = joblib.load("label_encoder.pkl")
 
-    st.write(label_encoder.classes_)
-
     return model, vectorizer
 
 model, vectorizer = load_model()
@@ -691,6 +689,8 @@ elif page == "🤖 AI Ticket Predictor":
                 )
 
                 st.success(action)
+                st.write("Model Classes:", model.classes_)
+                st.write("Label Encoder Classes:", label_encoder.classes_)
 
             except Exception as e:
 
