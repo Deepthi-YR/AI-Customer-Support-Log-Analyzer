@@ -78,9 +78,10 @@ def load_model():
     vectorizer = joblib.load("tfidf_vectorizer.pkl")
     label_encoder = joblib.load("label_encoder.pkl")
 
-    return model, vectorizer
+    return model, vectorizer, label_encoder
 
-model, vectorizer = load_model()
+
+model, vectorizer, label_encoder = load_model()
 
 # ----------------------------------------------------------
 # SIDEBAR
