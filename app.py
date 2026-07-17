@@ -100,4 +100,3 @@ if page == "🏠 Home":
     """)
 
     st.success("Project Developed as part of PGDBA Capstone")
-)
