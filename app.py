@@ -398,64 +398,17 @@ elif page == "📈 Business Insights":
     # KPI SUMMARY
     # ------------------------------------------------------
 
-    avg_response = df["First Response Time"].dropna().mean()
-    avg_resolution = df["Time to Resolution"].dropna().mean()
     avg_rating = df["Customer Satisfaction Rating"].dropna().mean()
 
-    col1, col2, col3 = st.columns(3)
+    col1 = st.columns(1)
 
     col1.metric(
-        "Avg First Response",
-        f"{avg_response:.2f} hrs" if pd.notna(avg_response) else "N/A"
-    )
-
-    col2.metric(
-        "Avg Resolution Time",
-        f"{avg_resolution:.2f} hrs" if pd.notna(avg_resolution) else "N/A"
-    )
-
-    col3.metric(
         "Customer Satisfaction",
         f"{avg_rating:.2f}/5" if pd.notna(avg_rating) else "N/A"
     )
 
     st.markdown("---")
 
-    # ------------------------------------------------------
-    # FIRST RESPONSE TIME
-    # ------------------------------------------------------
-
-    if df["First Response Time"].notna().sum() > 0:
-
-        st.subheader("First Response Time Distribution")
-
-        fig = px.histogram(
-            df,
-            x="First Response Time",
-            nbins=20,
-            title="Distribution of First Response Time"
-        )
-
-        st.plotly_chart(fig, use_container_width=True)
-
-    # ------------------------------------------------------
-    # RESOLUTION TIME
-    # ------------------------------------------------------
-
-    if df["Time to Resolution"].notna().sum() > 0:
-
-        st.subheader("Resolution Time Distribution")
-
-        fig = px.histogram(
-            df,
-            x="Time to Resolution",
-            nbins=20,
-            title="Distribution of Resolution Time"
-        )
-
-        st.plotly_chart(fig, use_container_width=True)
-
-    st.markdown("---")
 
     # ------------------------------------------------------
     # CUSTOMER SATISFACTION
