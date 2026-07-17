@@ -110,64 +110,42 @@ if page == "Dashboard":
     st.title("📊 Customer Support Dashboard")
     st.markdown("Business overview of customer support operations")
 
-    # ------------------------------------------------------
-    # KPI CARDS
-    # ------------------------------------------------------
+# ------------------------------------------------------
+# KPI CARDS
+# ------------------------------------------------------
 
-    total_tickets = len(df)
-    open_tickets = (df["Ticket Status"] == "Open").sum()
-    closed_tickets = (df["Ticket Status"] == "Closed").sum()
+total_tickets = len(df)
+open_tickets = (df["Ticket Status"] == "Open").sum()
+closed_tickets = (df["Ticket Status"] == "Closed").sum()
 
-    avg_rating = df["Customer Satisfaction Rating"].mean()
+avg_rating = df["Customer Satisfaction Rating"].mean()
 
-    col1, col2, col3, col4 = st.columns(4)
-
-    col1.metric(
-        "Total Tickets",
-        f"{total_tickets:,}"
-    )
-
-    col2.metric(
-        "Open Tickets",
-        f"{open_tickets:,}"
-    )
-
-    col3.metric(
-        "Closed Tickets",
-        f"{closed_tickets:,}"
-    )
-
-    col4.metric(
-        "Avg Customer Rating",
-        avg_rating = df["Customer Satisfaction Rating"].mean()
-
-if pd.isna(avg_rating)
+if pd.isna(avg_rating):
     avg_rating = 0
-    )
-    st.divider()
 
-#Ticket status
-    col1, col2 = st.columns(2)
+col1, col2, col3, col4 = st.columns(4)
 
-    with col1:
+col1.metric(
+    "Total Tickets",
+    f"{total_tickets:,}"
+)
 
-        st.subheader("Ticket Status")
+col2.metric(
+    "Open Tickets",
+    f"{open_tickets:,}"
+)
 
-        status_counts = (
-            df["Ticket Status"]
-            .value_counts()
-        )
+col3.metric(
+    "Closed Tickets",
+    f"{closed_tickets:,}"
+)
 
-        fig = px.pie(
-            values=status_counts.values,
-            names=status_counts.index,
-            title="Ticket Status Distribution"
-        )
+col4.metric(
+    "Avg Customer Rating",
+    f"{avg_rating:.2f}"
+)
 
-        st.plotly_chart(
-            fig,
-            use_container_width=True
-        )
+st.divider()
 
 #ticket type
     with col2:
