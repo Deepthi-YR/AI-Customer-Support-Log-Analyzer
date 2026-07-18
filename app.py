@@ -423,10 +423,10 @@ elif page == "📈 Business Insights":
     # AI Generated Insights
     # ------------------------------------------------------
     
-        total_tickets = len(df)
-        avg_rating = df["Customer Satisfaction Rating"].dropna().mean()
-        top_issue = df["Ticket Type"].mode()[0]
-        top_product = df["Product Purchased"].mode()[0]
+    total_tickets = len(df)
+    avg_rating = df["Customer Satisfaction Rating"].dropna().mean()
+    top_issue = df["Ticket Type"].mode()[0]
+    top_product = df["Product Purchased"].mode()[0]
 
     st.info(f"""
     ### 🤖 AI Summary
