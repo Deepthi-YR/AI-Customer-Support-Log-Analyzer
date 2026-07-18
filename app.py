@@ -861,7 +861,4 @@ Recommendation:
 - Provide additional training to support teams.
 """)
 
-# ==========================================================
-# BUSINESS INSIGHTS
-# ==========================================================
 
