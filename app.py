@@ -926,5 +926,104 @@ elif page == "📂 Data Explorer":
         "text/csv"
     )
 
+# ==========================================================
+# ABOUT
+# ==========================================================
+
+elif page == "ℹ️ About":
+
+    st.title("ℹ️ About the Project")
+
+    st.markdown("""
+    ## AI Customer Support Log Analyzer
+
+    The **AI Customer Support Log Analyzer** is a machine learning-powered application developed to help organizations analyze customer support tickets, identify common issues, understand customer sentiment, and automate ticket categorization.
+
+    This project combines **Natural Language Processing (NLP)**, **Machine Learning**, and **Business Analytics** to improve customer support efficiency and assist decision-makers with actionable insights.
+    """)
+
+    st.divider()
+
+    st.subheader("🎯 Project Objectives")
+
+    st.markdown("""
+    - Automatically classify customer support tickets.
+    - Analyze customer sentiment.
+    - Identify recurring support issues.
+    - Monitor customer satisfaction.
+    - Generate business insights and recommendations.
+    - Support faster and more accurate ticket routing.
+    """)
+
+    st.divider()
+
+    st.subheader("🛠 Technologies Used")
+
+    tech = {
+        "Python": "✔",
+        "Pandas": "✔",
+        "NumPy": "✔",
+        "Scikit-learn": "✔",
+        "XGBoost": "✔",
+        "NLTK / TextBlob": "✔",
+        "Plotly": "✔",
+        "Streamlit": "✔",
+        "Joblib": "✔"
+    }
+
+    st.table(pd.DataFrame({
+        "Technology": tech.keys(),
+        "Used": tech.values()
+    }))
+
+    st.divider()
+
+    st.subheader("📊 Machine Learning Pipeline")
+
+    st.markdown("""
+    1. Data Cleaning & Preprocessing
+    2. Text Cleaning & Lemmatization
+    3. TF-IDF Feature Extraction
+    4. Label Encoding
+    5. Train-Test Split
+    6. XGBoost Classification
+    7. RandomizedSearchCV Hyperparameter Tuning
+    8. 5-Fold Cross Validation
+    9. AI Ticket Prediction
+    """)
+
+    st.divider()
+
+    st.subheader("🏆 Final Model Performance")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric("Test Accuracy", "99.94%")
+
+    with col2:
+        st.metric("Cross Validation", "99.97%")
+
+    st.success("🏅 Final Model: XGBoost Classifier")
+
+    st.divider()
+
+    st.subheader("💡 Business Value")
+
+    st.info("""
+    • Reduces manual ticket classification.
+
+    • Improves customer support efficiency.
+
+    • Enables proactive issue identification.
+
+    • Provides actionable business insights.
+
+    • Enhances customer satisfaction through faster response handling.
+    """)
+
+    st.divider()
+
+    st.caption("Developed as a PGDBA Capstone Project using Python, Machine Learning, NLP, and Streamlit.")
 
 
