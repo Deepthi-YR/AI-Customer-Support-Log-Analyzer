@@ -620,6 +620,7 @@ elif page == "🤖 AI Ticket Predictor":
                 prediction = label_encoder.inverse_transform([prediction_num])[0]
                 
                 st.success(f"✅ Predicted Ticket Category: **{prediction}**")
+                st.balloons()
 
                 st.write("Prediction Number:", prediction_num)
                 st.write("Prediction Label:", prediction)
@@ -679,7 +680,7 @@ elif page == "🤖 AI Ticket Predictor":
         
                 action = actions.get(
                     prediction,
-                    "📞 Route to General Customer Support Team."
+                    "📋 Review the ticket manually and assign it to the appropriate support team."
                 )
                 
                 st.success(action)    
