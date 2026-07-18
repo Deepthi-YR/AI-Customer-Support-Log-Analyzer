@@ -603,40 +603,40 @@ elif page == "📈 Business Insights":
     # ------------------------------------------------------
     # BUSINESS RECOMMENDATIONS
     # ------------------------------------------------------
-
+    
     st.subheader("📌 AI Business Recommendations")
-
+    
     recommendations = []
     
     if top_issue == "Technical issue":
         recommendations.append(
-            "Increase Technical Support staffing to reduce resolution time."
+            "🔧 Increase Technical Support staffing to reduce resolution time."
         )
     
     if avg_rating < 3:
         recommendations.append(
-            "Customer satisfaction is below target. Improve response quality."
+            "⭐ Customer satisfaction is below target. Improve response quality and reduce response time."
         )
     else:
         recommendations.append(
-            "Customer satisfaction is healthy. Maintain current service standards."
+            "😊 Customer satisfaction is healthy. Maintain current service standards."
         )
     
     recommendations.append(
-        "Monitor recurring ticket categories to identify product improvements."
+        "📊 Monitor recurring ticket categories to identify product improvements."
     )
     
     recommendations.append(
-        "Use AI ticket classification to automate ticket routing."
+        "🤖 Continue using AI-based ticket classification to automate ticket routing."
     )
     
     recommendations.append(
-        "Review high-priority tickets daily to improve SLA compliance."
+        "🚨 Review High Priority tickets daily to improve SLA compliance."
     )
     
     for rec in recommendations:
         st.success(rec)
-
+    
     st.download_button(
         label="📥 Download Business Insights",
         data=df.to_csv(index=False),
@@ -860,5 +860,71 @@ Recommendation:
 - Improve response time.
 - Provide additional training to support teams.
 """)
+
+# ==========================================================
+# SENTIMENT ANALYSIS
+# ==========================================================
+elif page == "📂 Data Explorer":
+
+    st.title("📂 Data Explorer")
+
+    st.markdown("Explore the customer support dataset interactively.")
+
+    st.divider()
+
+    # -----------------------------
+    # Dataset Overview
+    # -----------------------------
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Rows", df.shape[0])
+    col2.metric("Columns", df.shape[1])
+    col3.metric("Missing Values", int(df.isnull().sum().sum()))
+
+    st.divider()
+
+    # -----------------------------
+    # Search Ticket
+    # -----------------------------
+
+    search = st.text_input("🔍 Search Ticket Subject")
+
+    filtered_df = df.copy()
+
+    if search:
+        filtered_df = filtered_df[
+            filtered_df["Ticket Subject"].str.contains(
+                search,
+                case=False,
+                na=False
+            )
+        ]
+
+    # -----------------------------
+    # Ticket Type Filter
+    # -----------------------------
+
+    ticket_filter = st.multiselect(
+        "Filter by Ticket Type",
+        sorted(df["Ticket Type"].unique())
+    )
+
+    if ticket_filter:
+        filtered_df = filtered_df[
+            filtered_df["Ticket Type"].isin(ticket_filter)
+        ]
+
+    st.dataframe(filtered_df, use_container_width=True)
+
+    st.divider()
+
+    st.download_button(
+        "📥 Download Filtered Data",
+        filtered_df.to_csv(index=False),
+        "filtered_customer_support_data.csv",
+        "text/csv"
+    )
+
 
 
