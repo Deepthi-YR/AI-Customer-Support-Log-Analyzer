@@ -823,5 +823,148 @@ Recommendation:
 - Provide additional training to support teams.
 """)
 
+# ==========================================================
+# BUSINESS INSIGHTS
+# ==========================================================
+elif page == "📈 Business Insights":
 
+    st.title("📈 Business Insights & Recommendations")
+
+    st.markdown("Business intelligence generated from customer support data.")
+
+    st.divider()
+
+    # ==========================
+    # KPI Cards
+    # ==========================
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric("📩 Total Tickets", len(df))
+
+    with col2:
+        resolved = (df["Ticket Status"] == "Closed").sum()
+        st.metric("✅ Resolved Tickets", resolved)
+
+    with col3:
+        pending = len(df) - resolved
+        st.metric("⏳ Pending Tickets", pending)
+
+    st.divider()
+
+    # ==========================
+    # Most Common Issue
+    # ==========================
+
+    st.subheader("📌 Most Common Ticket Category")
+
+    issue_counts = df["Ticket Type"].value_counts()
+
+    st.bar_chart(issue_counts)
+
+    top_issue = issue_counts.idxmax()
+
+    st.success(f"Most Frequently Reported Issue: **{top_issue}**")
+
+    st.divider()
+
+    # ==========================
+    # Priority Distribution
+    # ==========================
+
+    st.subheader("🚨 Ticket Priority Distribution")
+
+    priority_counts = df["Ticket Priority"].value_counts()
+
+    st.plotly_chart(
+        px.pie(
+            values=priority_counts.values,
+            names=priority_counts.index,
+            hole=0.4,
+            title="Priority Distribution"
+        ),
+        use_container_width=True
+    )
+
+    st.divider()
+
+    # ==========================
+    # Channel Distribution
+    # ==========================
+
+    st.subheader("📞 Support Channel Usage")
+
+    channel_counts = df["Ticket Channel"].value_counts()
+
+    st.plotly_chart(
+        px.bar(
+            x=channel_counts.index,
+            y=channel_counts.values,
+            title="Tickets by Support Channel"
+        ),
+        use_container_width=True
+    )
+
+    st.divider()
+
+    # ==========================
+    # Customer Satisfaction
+    # ==========================
+
+    if "Customer Satisfaction Rating" in df.columns:
+
+        ratings = df["Customer Satisfaction Rating"].dropna()
+
+        if len(ratings) > 0:
+
+            st.subheader("⭐ Customer Satisfaction")
+
+            avg_rating = ratings.mean()
+
+            st.metric(
+                "Average Rating",
+                f"{avg_rating:.2f} / 5"
+            )
+
+            st.plotly_chart(
+                px.histogram(
+                    ratings,
+                    nbins=5,
+                    title="Customer Satisfaction Ratings"
+                ),
+                use_container_width=True
+            )
+
+    st.divider()
+
+    # ==========================
+    # AI Recommendations
+    # ==========================
+
+    st.subheader("🤖 AI Business Recommendations")
+
+    recommendations = []
+
+    if pending > resolved:
+        recommendations.append(
+            "Increase support staff to reduce pending tickets."
+        )
+
+    if "High" in priority_counts.index:
+        recommendations.append(
+            "Prioritize high-severity technical issues."
+        )
+
+    if len(df["Sentiment"][df["Sentiment"]=="Negative"]) > len(df)*0.3:
+        recommendations.append(
+            "High negative sentiment detected. Improve response quality."
+        )
+
+    recommendations.append(
+        "Continue monitoring ticket trends to improve customer satisfaction."
+    )
+
+    for rec in recommendations:
+        st.info(rec)
 
