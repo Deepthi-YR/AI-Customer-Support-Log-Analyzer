@@ -687,3 +687,118 @@ elif page == "🤖 AI Ticket Predictor":
             except Exception as e:
 
                 st.error(f"Prediction Error: {e}")
+
+# ==========================================================
+# SENTIMENT ANALYSIS
+# ==========================================================
+elif page == "😊 Sentiment Analysis":
+
+    st.title("😊 Customer Sentiment Analysis")
+
+    st.markdown("Analyze customer emotions from support tickets using AI sentiment analysis.")
+
+    # -----------------------------------------
+    # Sentiment Counts
+    # -----------------------------------------
+
+    sentiment_counts = df["Sentiment"].value_counts()
+
+    positive = sentiment_counts.get("Positive", 0)
+    neutral = sentiment_counts.get("Neutral", 0)
+    negative = sentiment_counts.get("Negative", 0)
+
+    total = positive + neutral + negative
+
+    # -----------------------------------------
+    # KPI Cards
+    # -----------------------------------------
+
+    c1, c2, c3 = st.columns(3)
+
+    with c1:
+        st.metric("😊 Positive", positive)
+
+    with c2:
+        st.metric("😐 Neutral", neutral)
+
+    with c3:
+        st.metric("😠 Negative", negative)
+
+    st.divider()
+
+    # -----------------------------------------
+    # Pie Chart
+    # -----------------------------------------
+
+    fig1 = px.pie(
+        values=sentiment_counts.values,
+        names=sentiment_counts.index,
+        title="Overall Customer Sentiment Distribution",
+        hole=0.4
+    )
+
+    st.plotly_chart(fig1, use_container_width=True)
+
+    # -----------------------------------------
+    # Bar Chart
+    # -----------------------------------------
+
+    fig2 = px.bar(
+        x=sentiment_counts.index,
+        y=sentiment_counts.values,
+        color=sentiment_counts.index,
+        title="Sentiment Count"
+    )
+
+    st.plotly_chart(fig2, use_container_width=True)
+
+    st.divider()
+
+    # -----------------------------------------
+    # Sample Comments
+    # -----------------------------------------
+
+    st.subheader("Sample Customer Comments")
+
+    sentiment_choice = st.selectbox(
+        "Select Sentiment",
+        ["Positive", "Neutral", "Negative"]
+    )
+
+    sample_comments = df[
+        df["Sentiment"] == sentiment_choice
+    ][["Ticket Subject", "Ticket Description"]].head(5)
+
+    st.dataframe(sample_comments, use_container_width=True)
+
+    st.divider()
+
+    # -----------------------------------------
+    # Business Insight
+    # -----------------------------------------
+
+    st.subheader("Business Insight")
+
+    if positive > negative:
+
+        st.success("""
+Most customer interactions are positive, indicating customers are generally satisfied with the support experience.
+
+Recommendation:
+- Maintain current service quality.
+- Continue monitoring customer feedback.
+""")
+
+    else:
+
+        st.warning("""
+Negative sentiment is relatively high.
+
+Recommendation:
+- Investigate recurring issues.
+- Improve response time.
+- Provide additional training to support teams.
+""")
+
+
+
