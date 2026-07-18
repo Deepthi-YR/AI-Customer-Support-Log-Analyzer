@@ -9,6 +9,9 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 import joblib
+from nltk.sentiment import SentimentIntensityAnalyzer
+import nltk
+from textblob import TextBlob
 
 # ----------------------------------------------------------
 # PAGE CONFIG
@@ -62,6 +65,26 @@ footer{
 def load_data():
 
     df = pd.read_csv("customer_support_cleaned.xls")
+    # ---------------------------------------
+    # Sentiment Analysis using TextBlob
+    # ---------------------------------------
+    
+    def get_sentiment(text):
+        text = str(text)
+    
+        polarity = TextBlob(text).sentiment.polarity
+    
+        if polarity > 0:
+            return "Positive"
+        elif polarity < 0:
+            return "Negative"
+        else:
+            return "Neutral"
+    
+    df["Sentiment"] = (
+        df["Ticket Subject"].fillna("") + " " +
+        df["Ticket Description"].fillna("")
+    ).apply(get_sentiment)
 
     return df
 
