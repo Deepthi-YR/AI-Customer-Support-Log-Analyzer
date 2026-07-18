@@ -423,13 +423,13 @@ elif page == "📈 Business Insights":
     # AI Generated Insights
     # ------------------------------------------------------
     
+        total_tickets = len(df)
+        avg_rating = df["Customer Satisfaction Rating"].dropna().mean()
+        top_issue = df["Ticket Type"].mode()[0]
+        top_product = df["Product Purchased"].mode()[0]
+
     st.info(f"""
     ### 🤖 AI Summary
-    
-    - 📩 Total Support Tickets: **{len(df)}**
-    - 🔥 Most Common Issue: **{top_issue}**
-    - 📦 Most Reported Product: **{top_product}**
-    - ⭐ Average Customer Rating: **{avg_rating:.2f}/5** if available.
     
     These insights are automatically generated from the customer support dataset using machine learning and business analytics.
     """)
@@ -637,12 +637,12 @@ elif page == "📈 Business Insights":
     for rec in recommendations:
         st.success(rec)
 
-st.download_button(
-    label="📥 Download Business Insights",
-    data=df.to_csv(index=False),
-    file_name="business_insights.csv",
-    mime="text/csv"
-)
+    st.download_button(
+        label="📥 Download Business Insights",
+        data=df.to_csv(index=False),
+        file_name="business_insights.csv",
+        mime="text/csv"
+    )
 
 # ==========================================================
 # AI TICKET PREDICTOR
