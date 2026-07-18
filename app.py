@@ -142,84 +142,151 @@ page = st.sidebar.radio(
 )
 
 # ==========================================================
-# HOME PAGE
+# HOME
 # ==========================================================
 
 if page == "🏠 Home":
 
-    st.title("🎧 AI Customer Support Log Analyzer")
+    st.title("🤖 AI Customer Support Log Analyzer")
 
-    st.markdown("---")
+    st.markdown("""
+Welcome to the **AI Customer Support Log Analyzer**, an intelligent analytics application designed to help organizations analyze customer support tickets, understand customer sentiment, identify recurring issues, and automate ticket categorization using Machine Learning.
 
-    col1, col2 = st.columns([2,1])
+This application combines **Natural Language Processing (NLP)**, **XGBoost Machine Learning**, and **Business Intelligence Dashboards** to improve customer support operations and decision-making.
+""")
+
+    st.divider()
+
+    # ------------------------------------------------------
+    # PROJECT HIGHLIGHTS
+    # ------------------------------------------------------
+
+    st.subheader("🚀 Project Highlights")
+
+    col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-
-        st.markdown("""
-### 📌 Project Objective
-
-This project analyzes customer support tickets using Business Analytics
-and Machine Learning.
-
-The application enables businesses to:
-
-- Monitor customer support KPIs
-- Analyze ticket categories
-- Track customer satisfaction
-- Identify root causes
-- Predict ticket categories using AI
-- Generate business insights
-
----
-### 🛠 Technologies Used
-
-- Python
-- Streamlit
-- Pandas
-- Plotly
-- Scikit-Learn
-- TF-IDF
-- XGBoost
-- Machine Learning
-
----
-### 🤖 Machine Learning
-
-**Model Used**
-
-✔ XGBoost Classifier
-
-The model predicts customer support ticket categories
-from customer ticket descriptions.
-
-""")
+        st.metric("📩 Tickets", f"{len(df):,}")
 
     with col2:
+        st.metric("🎯 Accuracy", "99.94%")
 
-        st.info("""
-### Project Summary
+    with col3:
+        st.metric("🧠 ML Model", "XGBoost")
 
-Dataset Size
+    with col4:
+        st.metric("📊 Cross Validation", "99.97%")
 
-✔ 8,469 Tickets
+    st.divider()
 
-Machine Learning
+    # ------------------------------------------------------
+    # FEATURES
+    # ------------------------------------------------------
 
-✔ XGBoost
+    st.subheader("✨ Key Features")
 
-Deployment
+    st.markdown("""
+✅ Customer Support Dashboard
 
-✔ Streamlit Cloud
+✅ AI Ticket Category Prediction
 
-Course
+✅ Customer Sentiment Analysis
 
-PGDBA Capstone Project
+✅ Root Cause Analysis
 
+✅ Business Insights & Recommendations
+
+✅ Interactive Data Explorer
+
+✅ Downloadable Reports
 """)
 
-    st.markdown("---")
+    st.divider()
 
-    st.success("✅ AI Customer Support Log Analyzer successfully loaded.")
+    # ------------------------------------------------------
+    # APPLICATION WORKFLOW
+    # ------------------------------------------------------
+
+    st.subheader("🔄 Application Workflow")
+
+    st.markdown("""
+1️⃣ Customer support tickets are loaded.
+
+⬇️
+
+2️⃣ Text is cleaned and transformed using **TF-IDF**.
+
+⬇️
+
+3️⃣ The trained **XGBoost** model predicts the ticket category.
+
+⬇️
+
+4️⃣ Customer sentiment is analyzed using **TextBlob**.
+
+⬇️
+
+5️⃣ Dashboards generate KPIs, trends, and business insights.
+
+⬇️
+
+6️⃣ AI recommendations assist support teams in faster decision-making.
+""")
+
+    st.divider()
+
+    # ------------------------------------------------------
+    # PROJECT MODULES
+    # ------------------------------------------------------
+
+    st.subheader("📂 Modules Available")
+
+    modules = pd.DataFrame({
+        "Module": [
+            "📊 Dashboard",
+            "📈 Business Insights",
+            "🤖 AI Ticket Predictor",
+            "😊 Sentiment Analysis",
+            "📂 Data Explorer",
+            "ℹ️ About"
+        ],
+        "Purpose": [
+            "Monitor customer support KPIs",
+            "Generate operational insights",
+            "Predict ticket categories using XGBoost",
+            "Analyze customer emotions",
+            "Explore and filter the dataset",
+            "Project overview and methodology"
+        ]
+    })
+
+    st.dataframe(modules, use_container_width=True, hide_index=True)
+
+    st.divider()
+
+    # ------------------------------------------------------
+    # BUSINESS VALUE
+    # ------------------------------------------------------
+
+    st.subheader("💼 Business Value")
+
+    st.success("""
+✔ Reduces manual ticket classification.
+
+✔ Improves customer support efficiency.
+
+✔ Identifies recurring customer issues.
+
+✔ Supports data-driven decision-making.
+
+✔ Enhances customer satisfaction through faster ticket routing.
+""")
+
+    st.divider()
+
+    st.info(
+        "👈 Use the navigation menu on the left to explore the different modules of the application."
+    )
 
 # ==========================================================
 # DASHBOARD
