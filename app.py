@@ -74,7 +74,7 @@ st.markdown("---")
 @st.cache_data
 def load_data():
 
-    df = pd.read_csv("dashboard_data.csv")
+    df = pd.read_xls("dashboard_data.xls")
 
     return df
 
