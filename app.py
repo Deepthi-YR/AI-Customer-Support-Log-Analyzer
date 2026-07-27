@@ -7,8 +7,11 @@ import matplotlib.pyplot as plt
 @st.cache_data
 def load_data():
     return pd.read_csv("dashboard_data.xls")
-    print(df.columns.tolist())
+
 df = load_data()
+
+st.write("Columns:", df.columns.tolist())
+st.stop()
 
 # ==========================================
 # PAGE CONFIG
