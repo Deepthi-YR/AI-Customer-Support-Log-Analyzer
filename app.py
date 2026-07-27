@@ -193,35 +193,35 @@ elif page == "📊 Dashboard":
 
         st.plotly_chart(fig2, use_container_width=True)
 
-st.divider()
+    st.divider()
+    
+    st.subheader("☁ Most Frequent Words")
+    
+    text = " ".join(df["Complaint"].astype(str))
+    
+    wc = WordCloud(
+        width=900,
+        height=400,
+        background_color="white"
+    ).generate(text)
 
-st.subheader("☁ Most Frequent Words")
-
-text = " ".join(df["Complaint"].astype(str))
-
-wc = WordCloud(
-    width=900,
-    height=400,
-    background_color="white"
-).generate(text)
-
-fig, ax = plt.subplots(figsize=(12,5))
-
-ax.imshow(wc)
-
-ax.axis("off")
-
-st.pyplot(fig)
+    fig, ax = plt.subplots(figsize=(12,5))
+    
+    ax.imshow(wc)
+    
+    ax.axis("off")
+    
+    st.pyplot(fig)
 
     #Complaint table
-st.divider()
-
-st.subheader("Recent Complaints")
-
-st.dataframe(
-    df.head(20),
-    use_container_width=True
-)
+    st.divider()
+    
+    st.subheader("Recent Complaints")
+    
+    st.dataframe(
+        df.head(20),
+        use_container_width=True
+    )
 
 # ==========================================
 # DATA EXPLORER
