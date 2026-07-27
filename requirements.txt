@@ -1,11 +1,6 @@
 streamlit
+scikit-learn
 pandas
 numpy
-matplotlib
-seaborn
-scikit-learn
-xgboost
-joblib
 nltk
-plotly
-textblob
+xgboost
