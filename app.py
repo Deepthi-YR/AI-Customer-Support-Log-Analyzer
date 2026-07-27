@@ -1,4 +1,14 @@
 import streamlit as st
+import pandas as pd
+import plotly.express as px
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+
+@st.cache_data
+def load_data():
+    return pd.read_csv("data/complaints.csv")
+
+df = load_data()
 
 # ==========================================
 # PAGE CONFIG
@@ -144,9 +154,74 @@ Natural Language Processing (NLP) and Machine Learning.
 
 elif page == "📊 Dashboard":
 
-    st.header("📊 Dashboard")
+    st.header("📊 Analytics Dashboard")
 
-    st.info("Dashboard charts will be added in the next phase.")
+    c1, c2, c3, c4 = st.columns(4)
+
+    c1.metric("Total Complaints", len(df))
+    c2.metric("Categories", df["Category"].nunique())
+    c3.metric("Average Length", round(df["Complaint"].str.len().mean()))
+    c4.metric("Missing Values", df.isna().sum().sum())
+
+    st.divider()
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        st.subheader("Complaint Categories")
+
+        fig = px.bar(
+            df["Category"].value_counts().reset_index(),
+            x="Category",
+            y="count",
+            color="Category",
+            title="Complaint Distribution"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col2:
+
+        st.subheader("Category Share")
+
+        fig2 = px.pie(
+            df,
+            names="Category",
+            hole=.5
+        )
+
+        st.plotly_chart(fig2, use_container_width=True)
+
+st.divider()
+
+st.subheader("☁ Most Frequent Words")
+
+text = " ".join(df["Complaint"].astype(str))
+
+wc = WordCloud(
+    width=900,
+    height=400,
+    background_color="white"
+).generate(text)
+
+fig, ax = plt.subplots(figsize=(12,5))
+
+ax.imshow(wc)
+
+ax.axis("off")
+
+st.pyplot(fig)
+
+    #Complaint table
+st.divider()
+
+st.subheader("Recent Complaints")
+
+st.dataframe(
+    df.head(20),
+    use_container_width=True
+)
 
 # ==========================================
 # DATA EXPLORER
