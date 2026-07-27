@@ -11,7 +11,7 @@ import joblib
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("dashboard_data.csv")
+    return pd.read_csv("dashboard_data.xls")
 
 df = load_data()
 
