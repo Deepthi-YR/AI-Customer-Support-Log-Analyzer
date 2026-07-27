@@ -100,25 +100,41 @@ Intelligent Complaint Classification using NLP & Machine Learning
 st.write("")
 
 # ==========================================
-# NAVIGATION
+# SIDEBAR NAVIGATION
 # ==========================================
 
-menu = [
-    "🏠 Home",
-    "📊 Dashboard",
-    "📂 Dataset Explorer",
-    "🤖 AI Predictor",
-    "📈 Model Performance",
-    "ℹ About"
-]
+with st.sidebar:
 
-page = st.segmented_control(
-    "Navigation",
-    options=menu,
-    default=menu[0]
-)
+    st.title("🤖 AI Support")
 
-st.divider()
+    st.markdown("---")
+
+    page = st.radio(
+        "Navigation",
+        (
+            "🏠 Home",
+            "📊 Dashboard",
+            "📂 Dataset Explorer",
+            "🤖 AI Predictor",
+            "📈 Model Performance",
+            "ℹ️ About"
+        ),
+        label_visibility="collapsed"
+    )
+
+    st.markdown("---")
+
+    st.success("🟢 Model Ready")
+
+    st.info("""
+**AI Customer Support Log Analyser**
+
+Machine Learning + NLP project for automatic complaint classification.
+""")
+
+    st.markdown("---")
+
+    st.caption("Version 1.0")
 
 # ==========================================
 # HOME
