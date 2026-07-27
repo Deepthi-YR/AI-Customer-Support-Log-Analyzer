@@ -105,10 +105,10 @@ st.write("")
 
 page = st.segmented_control(
     "Navigation",
-    options=[
+    menu = [
         "🏠 Home",
         "📊 Dashboard",
-        "📁 Data Explorer",
+        "📂 Dataset Explorer",
         "🤖 AI Predictor",
         "📈 Model Performance",
         "ℹ About"
