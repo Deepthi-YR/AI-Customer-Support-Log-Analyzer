@@ -3,3 +3,5 @@ scikit-learn
 pandas
 numpy
 nltk
+streamlit >= 1.39
+plotly
