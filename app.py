@@ -260,20 +260,46 @@ elif page == "📁 Data Explorer":
 
 elif page == "🤖 AI Predictor":
 
-    st.header("🤖 AI Predictor")
+    st.header("🤖 AI Complaint Classifier")
+    st.write("Enter a customer complaint below and let the AI predict its category.")
+
+    import joblib
+
+    @st.cache_resource
+    def load_model():
+        model = joblib.load("best_model.pkl")
+        vectorizer = joblib.load("tfidf_vectorizer.pkl")
+        encoder = joblib.load("label_encoder.pkl")
+        return model, vectorizer, encoder
+
+    model, vectorizer, encoder = load_model()
 
     complaint = st.text_area(
-        "Enter a customer complaint",
-        height=180
+        "✍️ Enter Customer Complaint",
+        height=200,
+        placeholder="Example: My credit card was charged twice and customer support is not responding."
     )
 
-    if st.button("Predict Category"):
+    if st.button("🔍 Predict Category", use_container_width=True):
 
-        if complaint.strip()=="":
-            st.warning("Please enter a complaint.")
+        if complaint.strip() == "":
+            st.warning("Please enter a complaint before predicting.")
         else:
-            st.success("Prediction will appear here.")
 
+            # Transform text
+            text_vector = vectorizer.transform([complaint])
+
+            # Predict
+            prediction = model.predict(text_vector)
+
+            # Decode label
+            predicted_category = encoder.inverse_transform(prediction)[0]
+
+            st.success("Prediction Completed Successfully!")
+
+            st.markdown("### 🎯 Predicted Category")
+
+            st.info(predicted_category)
 # ==========================================
 # MODEL PERFORMANCE
 # ==========================================
