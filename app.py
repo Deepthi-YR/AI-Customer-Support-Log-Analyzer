@@ -1,181 +1,226 @@
 import streamlit as st
-import pickle
-import re
-import string
-import nltk
 
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
+# ---------------- PAGE CONFIG ---------------- #
 
-# -----------------------------
-# Download NLTK Resources
-# -----------------------------
-nltk.download("stopwords")
-nltk.download("wordnet")
-nltk.download("omw-1.4")
-
-# -----------------------------
-# Load Saved Files
-# -----------------------------
-with open("best_model.pkl", "rb") as file:
-    model = pickle.load(file)
-
-with open("tfidf_vectorizer.pkl", "rb") as file:
-    vectorizer = pickle.load(file)
-
-with open("label_encoder.pkl", "rb") as file:
-    label_encoder = pickle.load(file)
-
-# -----------------------------
-# NLP Preprocessing
-# -----------------------------
-stop_words = set(stopwords.words("english"))
-lemmatizer = WordNetLemmatizer()
-
-def preprocess_text(text):
-
-    text = text.lower()
-
-    text = re.sub(r"\d+", "", text)
-
-    text = text.translate(str.maketrans("", "", string.punctuation))
-
-    words = text.split()
-
-    words = [word for word in words if word not in stop_words]
-
-    words = [lemmatizer.lemmatize(word) for word in words]
-
-    return " ".join(words)
-
-# -----------------------------
-# Page Configuration
-# -----------------------------
 st.set_page_config(
     page_title="AI Customer Support Log Analyser",
     page_icon="🤖",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# =============================
-# Sidebar
-# =============================
+# ---------------- SIDEBAR ---------------- #
 
-st.sidebar.title("🤖 AI Customer Support Log Analyser")
-
+st.sidebar.title("🤖 AI Customer Support")
 st.sidebar.markdown("---")
-
-st.sidebar.header("📌 About Project")
-
-st.sidebar.write(
-"""
-This application uses **Natural Language Processing (NLP)** and
-**Machine Learning** to automatically classify customer complaints
-into the appropriate product category.
-
-The system helps organizations understand customer issues
-and route complaints efficiently.
-"""
-)
-
-st.sidebar.markdown("---")
-
-st.sidebar.header("🧠 Machine Learning Model")
-
-st.sidebar.success("✔ Logistic Regression")
-
-st.sidebar.write("**Model Accuracy:** 84.71%")
-
-st.sidebar.markdown("---")
-
-st.sidebar.header("🛠 Technologies Used")
-
-st.sidebar.write("""
-- Python
-- Streamlit
-- Scikit-learn
-- NLP
-- TF-IDF Vectorizer
-- Logistic Regression
-- NLTK
-- Pandas
-""")
-
-st.sidebar.markdown("---")
-
-st.sidebar.header("📂 Dataset")
-
-st.sidebar.write("""
-Consumer Complaints Dataset for NLP
-""")
-
-st.sidebar.markdown("---")
-
-st.sidebar.header("💡 Sample Complaint")
 
 st.sidebar.info(
 """
-I have been charged twice for my credit card bill and customer support is not responding.
+### Navigation
+
+Use the pages on the left.
+
+🏠 Home
+
+📊 Dashboard
+
+📁 Data Explorer
+
+🤖 AI Predictor
+
+📈 Model Performance
+
+ℹ About Project
 """
 )
 
 st.sidebar.markdown("---")
 
-st.sidebar.caption("Developed as an AI/ML Academic Project")
+st.sidebar.success("Machine Learning Project")
 
-# =============================
-# Main Page
-# =============================
+# ---------------- HEADER ---------------- #
 
 st.title("🤖 AI Customer Support Log Analyser")
 
 st.markdown(
 """
-Welcome!
+### Intelligent Customer Complaint Classification using Machine Learning
 
-This application predicts the **Product Category** of a customer complaint
-using **Machine Learning** and **Natural Language Processing (NLP)**.
-
-Simply enter a customer complaint below and click **Predict Category**.
+This application automatically classifies customer support complaints
+using Natural Language Processing (NLP) and Machine Learning.
 """
 )
 
 st.markdown("---")
 
-user_input = st.text_area(
-    "📝 Enter Customer Complaint",
-    placeholder="Type the customer complaint here...",
-    height=220
-)
+# ---------------- KPI SECTION ---------------- #
 
-predict = st.button("🚀 Predict Category")
+col1, col2, col3, col4 = st.columns(4)
 
-if predict:
+with col1:
+    st.metric(
+        label="Dataset",
+        value="Consumer Complaints"
+    )
 
-    if user_input.strip() == "":
+with col2:
+    st.metric(
+        label="ML Model",
+        value="Logistic Regression"
+    )
 
-        st.warning("⚠ Please enter a customer complaint.")
+with col3:
+    st.metric(
+        label="Vectorizer",
+        value="TF-IDF"
+    )
 
-    else:
+with col4:
+    st.metric(
+        label="Framework",
+        value="Streamlit"
+    )
 
-        clean_text = preprocess_text(user_input)
+st.markdown("---")
 
-        vector = vectorizer.transform([clean_text])
+# ---------------- PROJECT OVERVIEW ---------------- #
 
-        prediction = model.predict(vector)
+left, right = st.columns([2,1])
 
-        category = label_encoder.inverse_transform(prediction)
+with left:
 
-        st.success("✅ Prediction Completed Successfully!")
+    st.subheader("📌 Project Overview")
 
-        st.markdown("## 📌 Predicted Product Category")
+    st.write("""
 
-        st.info(category[0])
+Customer support teams receive thousands of complaints every day.
+
+Manually categorizing these complaints is:
+
+- Time consuming
+- Error-prone
+- Expensive
+
+This AI-powered system automatically predicts the complaint category using NLP and Machine Learning.
+
+### Features
+
+✅ Complaint Classification
+
+✅ Data Visualization
+
+✅ Interactive Dashboard
+
+✅ AI Prediction
+
+✅ Model Performance Metrics
+
+✅ GitHub Deployable
+
+""")
+
+with right:
+
+    st.subheader("🧠 Technologies")
+
+    st.info("""
+Python
+
+Pandas
+
+NumPy
+
+Matplotlib
+
+Scikit-Learn
+
+NLTK
+
+TF-IDF
+
+Logistic Regression
+
+Streamlit
+""")
+
+st.markdown("---")
+
+# ---------------- WORKFLOW ---------------- #
+
+st.subheader("⚙ Project Workflow")
+
+st.write("""
+
+Raw Complaint
+
+⬇
+
+Text Cleaning
+
+⬇
+
+Tokenization
+
+⬇
+
+TF-IDF Vectorization
+
+⬇
+
+Machine Learning Model
+
+⬇
+
+Predicted Complaint Category
+
+""")
+
+st.markdown("---")
+
+# ---------------- PROJECT HIGHLIGHTS ---------------- #
+
+st.subheader("🚀 Project Highlights")
+
+c1, c2, c3 = st.columns(3)
+
+with c1:
+
+    st.success("""
+### NLP
+
+✔ Text Cleaning
+
+✔ Stopword Removal
+
+✔ Lemmatization
+""")
+
+with c2:
+
+    st.warning("""
+### Machine Learning
+
+✔ TF-IDF
+
+✔ Logistic Regression
+
+✔ Model Evaluation
+""")
+
+with c3:
+
+    st.info("""
+### Dashboard
+
+✔ Interactive
+
+✔ Multipage
+
+✔ Deployable
+""")
 
 st.markdown("---")
 
 st.caption(
-"""
-AI Customer Support Log Analyser | Machine Learning & NLP Project
-"""
+    "Developed using Streamlit • NLP • Machine Learning • Scikit-Learn"
 )
