@@ -1,159 +1,91 @@
-# ==========================================================
-# AI CUSTOMER SUPPORT LOG ANALYZER
-# Streamlit Application
-# ==========================================================
-
 import streamlit as st
-import pandas as pd
-import numpy as np
-import joblib
-import plotly.express as px
-import plotly.graph_objects as go
+import pickle
+import re
+import string
+import nltk
 
-from pathlib import Path
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 
-# ==========================================================
-# PAGE CONFIGURATION
-# ==========================================================
+# Download NLTK resources
+nltk.download("stopwords")
+nltk.download("wordnet")
+nltk.download("omw-1.4")
+
+# Load saved model files
+with open("best_model.pkl", "rb") as file:
+    model = pickle.load(file)
+
+with open("tfidf_vectorizer.pkl", "rb") as file:
+    vectorizer = pickle.load(file)
+
+with open("label_encoder.pkl", "rb") as file:
+    label_encoder = pickle.load(file)
+
+# Initialize preprocessing tools
+stop_words = set(stopwords.words("english"))
+lemmatizer = WordNetLemmatizer()
+
+
+# Text preprocessing
+def preprocess_text(text):
+
+    text = text.lower()
+
+    text = re.sub(r"\d+", "", text)
+
+    text = text.translate(str.maketrans("", "", string.punctuation))
+
+    words = text.split()
+
+    words = [word for word in words if word not in stop_words]
+
+    words = [lemmatizer.lemmatize(word) for word in words]
+
+    return " ".join(words)
+
+
+# ---------------- Streamlit UI ---------------- #
 
 st.set_page_config(
-    page_title="AI Customer Support Log Analyzer",
-    page_icon="🎧",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="AI Customer Support Log Analyser",
+    page_icon="🤖",
+    layout="centered"
 )
 
-# ==========================================================
-# CUSTOM CSS
-# ==========================================================
+st.title("🤖 AI Customer Support Log Analyser")
 
-st.markdown("""
-<style>
-
-.main{
-    background-color:#F8F9FA;
-}
-
-h1,h2,h3{
-    color:#003366;
-}
-
-div[data-testid="metric-container"]{
-    background-color:white;
-    border-radius:12px;
-    padding:15px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.08);
-}
-
-.sidebar .sidebar-content{
-    background:#003366;
-}
-
-hr{
-    margin-top:0;
-    margin-bottom:1rem;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-st.title("🎧 AI Customer Support Log Analyzer")
-
-st.markdown("""
-Analyze customer support tickets using Machine Learning,
-visualize operational KPIs, and predict ticket categories
-from customer complaints.
-""")
-
-st.markdown("---")
-
-# ==========================================================
-# LOAD DATA
-# ==========================================================
-
-@st.cache_data
-def load_data():
-
-    df = pd.read_xls("dashboard_data.xls")
-
-    return df
-
-
-@st.cache_resource
-def load_models():
-
-    model = joblib.load("best_model.joblib")
-    vectorizer = joblib.load("tfidf_vectorizer.pkl")
-    encoder = joblib.load("label_encoder.pkl")
-
-    return model, vectorizer, encoder
-
-
-df = load_data()
-
-model, tfidf, label_encoder = load_models()
-
-# ==========================================================
-# SIDEBAR
-# ==========================================================
-
-st.sidebar.title("Navigation")
-
-page = st.sidebar.radio(
-
-    "Select Page",
-
-    [
-        "Dashboard",
-        "AI Ticket Classifier",
-        "Business Insights",
-        "About Project"
-    ]
-
+st.markdown(
+"""
+This application uses **Machine Learning and NLP**
+to automatically classify customer complaints into the appropriate product category.
+"""
 )
 
-# ==========================================================
-# DASHBOARD
-# ==========================================================
+st.subheader("Enter Customer Complaint")
 
-if page == "Dashboard":
+user_input = st.text_area(
+    "",
+    placeholder="Example: I was charged twice for my credit card payment and customer support has not responded.",
+    height=180
+)
 
-    st.header("📊 Dashboard")
+if st.button("Predict Category"):
 
-    st.write("Overview of Customer Support Performance")
+    if user_input.strip() == "":
+        st.warning("Please enter a customer complaint.")
+    else:
 
-    st.markdown("---")
+        clean_text = preprocess_text(user_input)
 
+        vector = vectorizer.transform([clean_text])
 
-    total_tickets = len(df)
+        prediction = model.predict(vector)
 
-    open_tickets = len(df[df["Ticket Status"]=="Open"])
+        category = label_encoder.inverse_transform(prediction)
 
-    closed_tickets = len(df[df["Ticket Status"]=="Closed"])
+        st.success("Prediction Completed!")
 
-    avg_rating = round(
-        df["Customer Satisfaction Rating"].mean(),
-        2
-    )
+        st.markdown("### Predicted Product Category")
 
-    c1,c2,c3,c4 = st.columns(4)
-
-    c1.metric(
-        "Total Tickets",
-        f"{total_tickets:,}"
-    )
-
-    c2.metric(
-        "Open Tickets",
-        f"{open_tickets:,}"
-    )
-
-    c3.metric(
-        "Closed Tickets",
-        f"{closed_tickets:,}"
-    )
-
-    c4.metric(
-        "Average Rating",
-        avg_rating
-    )
+        st.info(category[0])
