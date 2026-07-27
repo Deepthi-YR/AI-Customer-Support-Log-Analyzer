@@ -331,6 +331,8 @@ elif page == "🤖 AI Predictor":
             )
             
             st.plotly_chart(fig, use_container_width=True)
+
+
 # ==========================================
 # MODEL PERFORMANCE
 # ==========================================
@@ -339,7 +341,46 @@ elif page == "📈 Model Performance":
 
     st.header("📈 Model Performance")
 
-    st.info("Accuracy, Confusion Matrix and Classification Report will be displayed.")
+    st.write("Performance summary of the trained Machine Learning model.")
+
+    # KPI Cards
+    c1, c2, c3, c4 = st.columns(4)
+
+    c1.metric("Model", "Best Model")
+    c2.metric("Vectorizer", "TF-IDF")
+    c3.metric("Classes", len(encoder.classes_))
+    c4.metric("Status", "Ready")
+
+    st.divider()
+
+    st.subheader("🏆 Model Information")
+
+    st.info("""
+**Algorithm:** Best Performing Model
+
+**Text Vectorization:** TF-IDF
+
+**Label Encoding:** LabelEncoder
+
+**Deployment:** Streamlit
+""")
+
+    st.divider()
+
+    st.subheader("📋 Supported Complaint Categories")
+
+    category_df = pd.DataFrame({
+        "Complaint Categories": encoder.classes_
+    })
+
+    st.dataframe(
+        category_df,
+        use_container_width=True
+    )
+
+    st.divider()
+
+    st.success("✅ Model loaded successfully and ready for prediction.")
 
 # ==========================================
 # ABOUT
