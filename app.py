@@ -103,22 +103,21 @@ st.write("")
 # NAVIGATION
 # ==========================================
 
-page = st.segmented_control(
-    "Navigation",
-    menu = [
-        "🏠 Home",
-        "📊 Dashboard",
-        "📂 Dataset Explorer",
-        "🤖 AI Predictor",
-        "📈 Model Performance",
-        "ℹ About"
-    ],
-)
+menu = [
+    "🏠 Home",
+    "📊 Dashboard",
+    "📂 Dataset Explorer",
+    "🤖 AI Predictor",
+    "📈 Model Performance",
+    "ℹ About"
+]
+
 page = st.segmented_control(
     "Navigation",
     options=menu,
     default=menu[0]
 )
+
 st.divider()
 
 # ==========================================
