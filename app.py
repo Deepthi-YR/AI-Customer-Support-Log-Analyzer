@@ -245,6 +245,38 @@ elif page == "📊 Dashboard":
 
     st.divider()
 
+    # ---------------------------
+    # Top 10 Complaint Categories
+    # ---------------------------
+
+    st.divider()
+
+    st.subheader("🏆 Top 10 Complaint Categories")
+    
+    top10 = (
+        df["product"]
+        .value_counts()
+        .head(10)
+        .reset_index()
+    )
+    
+    top10.columns = ["Product", "Count"]
+    
+    fig3 = px.bar(
+        top10,
+        x="Count",
+        y="Product",
+        orientation="h",
+        color="Count",
+        title="Top 10 Complaint Categories"
+    )
+    
+    fig3.update_layout(
+        yaxis=dict(categoryorder="total ascending")
+    )
+    
+    st.plotly_chart(fig3, use_container_width=True)
+    
     # ------------------------------
     # Word Cloud
     # ------------------------------
@@ -269,6 +301,31 @@ elif page == "📊 Dashboard":
 
     st.divider()
 
+    # -----------------------------
+    # Complaint Length Distribution
+    # -----------------------------
+
+    st.divider()
+
+    st.subheader("📏 Complaint Length Distribution")
+    
+    df["Complaint_Length"] = df["narrative"].astype(str).str.split().str.len()
+    
+    fig4 = px.histogram(
+        df,
+        x="Complaint_Length",
+        nbins=30,
+        color_discrete_sequence=["#1f77b4"],
+        title="Distribution of Complaint Length"
+    )
+    
+    fig4.update_layout(
+        xaxis_title="Number of Words",
+        yaxis_title="Number of Complaints"
+    )
+    
+    st.plotly_chart(fig4, use_container_width=True)    
+    
     # ------------------------------
     # Data Table
     # ------------------------------
