@@ -288,18 +288,49 @@ elif page == "🤖 AI Predictor":
 
             # Transform text
             text_vector = vectorizer.transform([complaint])
-
-            # Predict
-            prediction = model.predict(text_vector)
-
-            # Decode label
-            predicted_category = encoder.inverse_transform(prediction)[0]
-
-            st.success("Prediction Completed Successfully!")
-
-            st.markdown("### 🎯 Predicted Category")
-
-            st.info(predicted_category)
+            
+            # Prediction with confidence
+            probabilities = model.predict_proba(text_vector)[0]
+            
+            prediction = probabilities.argmax()
+            
+            predicted_category = encoder.inverse_transform([prediction])[0]
+            
+            confidence = probabilities.max() * 100
+            
+            st.success("✅ Prediction Completed!")
+            
+            # KPI Cards
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.metric("🎯 Predicted Category", predicted_category)
+            
+            with col2:
+                st.metric("📊 Confidence", f"{confidence:.2f}%")
+            
+            # Probability Chart
+            prob_df = pd.DataFrame({
+                "Category": encoder.classes_,
+                "Probability": probabilities
+            })
+            
+            fig = px.bar(
+                prob_df,
+                x="Category",
+                y="Probability",
+                color="Probability",
+                title="Prediction Confidence",
+                text_auto=".2f"
+            )
+            
+            fig.update_layout(
+                xaxis_title="Complaint Category",
+                yaxis_title="Probability",
+                showlegend=False
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
 # ==========================================
 # MODEL PERFORMANCE
 # ==========================================
