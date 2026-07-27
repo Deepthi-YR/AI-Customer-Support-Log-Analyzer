@@ -398,14 +398,14 @@ elif page == "ℹ About":
     st.header("ℹ️ About AI Customer Support Log Analyser")
 
     st.markdown("""
-    ## 🎯 Project Objective
+## 🎯 Project Objective
 
-    The **AI Customer Support Log Analyser** is a Machine Learning and NLP application
-    that automatically classifies customer complaints into predefined categories.
+The **AI Customer Support Log Analyser** is a Machine Learning and NLP application
+that automatically classifies customer complaints into predefined categories.
 
-    It helps organizations quickly analyze customer issues, reduce manual effort,
-    and improve support efficiency.
-    """)
+It helps organizations analyze customer issues quickly, reduce manual effort,
+and improve customer support efficiency.
+""")
 
     st.divider()
 
@@ -448,7 +448,7 @@ elif page == "ℹ About":
 
 • Plotly
 
-• Scikit-Learn
+• Scikit-learn
 
 • NLTK
 
@@ -461,4 +461,61 @@ elif page == "ℹ About":
 
     st.subheader("📂 Machine Learning Workflow")
 
-    st.markdown("""
+    workflow = """
+Customer Complaint
+        │
+        ▼
+Text Cleaning
+        │
+        ▼
+TF-IDF Vectorization
+        │
+        ▼
+Machine Learning Model
+        │
+        ▼
+Label Decoder
+        │
+        ▼
+Predicted Category
+"""
+
+    st.code(workflow)
+
+    st.divider()
+
+    st.subheader("📌 Dataset")
+
+    st.write(
+        "The project uses customer complaint narratives for supervised "
+        "machine learning. Each complaint is mapped to its corresponding "
+        "product category, allowing the model to learn patterns and classify "
+        "new complaints."
+    )
+
+    st.divider()
+
+    st.subheader("👨‍💻 Project Summary")
+
+    st.write("""
+This project demonstrates the complete Machine Learning lifecycle:
+
+• Data Cleaning
+
+• Exploratory Data Analysis
+
+• Natural Language Processing
+
+• Feature Engineering (TF-IDF)
+
+• Model Training
+
+• Model Evaluation
+
+• Streamlit Deployment
+""")
+
+    st.divider()
+
+    st.caption("© 2026 AI Customer Support Log Analyser | Developed using Streamlit")
+
