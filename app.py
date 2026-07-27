@@ -1,14 +1,32 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+import joblib
+
+# ============================
+# Load Dataset
+# ============================
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("dashboard_data.xls")
+    return pd.read_csv("dashboard_data.csv")
 
 df = load_data()
+
+# ============================
+# Load ML Models
+# ============================
+
+@st.cache_resource
+def load_model():
+    model = joblib.load("best_model.pkl")
+    vectorizer = joblib.load("tfidf_vectorizer.pkl")
+    encoder = joblib.load("label_encoder.pkl")
+    return model, vectorizer, encoder
+
+model, vectorizer, encoder = load_model()
 
 # ==========================================
 # PAGE CONFIG
@@ -262,17 +280,6 @@ elif page == "🤖 AI Predictor":
 
     st.header("🤖 AI Complaint Classifier")
     st.write("Enter a customer complaint below and let the AI predict its category.")
-
-    import joblib
-
-    @st.cache_resource
-    def load_model():
-        model = joblib.load("best_model.pkl")
-        vectorizer = joblib.load("tfidf_vectorizer.pkl")
-        encoder = joblib.load("label_encoder.pkl")
-        return model, vectorizer, encoder
-
-    model, vectorizer, encoder = load_model()
 
     complaint = st.text_area(
         "✍️ Enter Customer Complaint",
