@@ -263,14 +263,86 @@ elif page == "📊 Dashboard":
     )
 
 # ==========================================
-# DATA EXPLORER
+# DATASET EXPLORER
 # ==========================================
 
-elif page == "📁 Data Explorer":
+elif page == "📂 Dataset Explorer":
 
-    st.header("📁 Data Explorer")
+    st.header("📂 Dataset Explorer")
 
-    st.info("Dataset preview and filtering will be added.")
+    st.write("Browse, search, filter and download the complaint dataset.")
+
+    st.divider()
+
+    # KPI Cards
+    c1, c2, c3 = st.columns(3)
+
+    c1.metric("Total Records", len(df))
+    c2.metric("Products", df["product"].nunique())
+    c3.metric("Columns", len(df.columns))
+
+    st.divider()
+
+    # Product Filter
+    products = ["All"] + sorted(df["product"].unique().tolist())
+
+    selected_product = st.selectbox(
+        "📌 Select Product",
+        products
+    )
+
+    if selected_product == "All":
+        filtered_df = df.copy()
+    else:
+        filtered_df = df[df["product"] == selected_product]
+
+    # Search Complaint
+    search = st.text_input(
+        "🔍 Search Complaint Text",
+        placeholder="Type any keyword..."
+    )
+
+    if search:
+        filtered_df = filtered_df[
+            filtered_df["narrative"]
+            .astype(str)
+            .str.contains(search, case=False, na=False)
+        ]
+
+    st.divider()
+
+    st.subheader("📋 Complaint Records")
+
+    rows = st.slider(
+    "Number of Rows",
+    min_value=10,
+    max_value=100,
+    value=20
+    )
+    
+    st.dataframe(
+        filtered_df.head(rows),
+        use_container_width=True,
+        height=450
+    )
+    st.dataframe(
+        filtered_df,
+        use_container_width=True,
+        height=450
+    )
+
+    st.write(f"Showing **{len(filtered_df)}** records")
+
+    st.divider()
+
+    csv = filtered_df.to_csv(index=False).encode("utf-8")
+
+    st.download_button(
+        label="📥 Download Filtered Data",
+        data=csv,
+        file_name="filtered_complaints.csv",
+        mime="text/csv"
+    )
 
 # ==========================================
 # AI PREDICTOR
