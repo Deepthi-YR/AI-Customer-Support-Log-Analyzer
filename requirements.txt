@@ -1,7 +1,12 @@
 streamlit
-scikit-learn
 pandas
 numpy
+matplotlib
+plotly
+scikit-learn
 nltk
+wordcloud
+pillow
+joblib
 streamlit >= 1.39
 plotly
