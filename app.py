@@ -112,8 +112,8 @@ page = st.segmented_control(
         "🤖 AI Predictor",
         "📈 Model Performance",
         "ℹ About"
-    ]
-
+    ],
+)
 page = st.segmented_control(
     "Navigation",
     options=menu,
