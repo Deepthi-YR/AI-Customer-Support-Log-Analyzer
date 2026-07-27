@@ -390,45 +390,75 @@ elif page == "📈 Model Performance":
     st.success("✅ Model loaded successfully and ready for prediction.")
 
 # ==========================================
-# ABOUT
+# ABOUT PROJECT
 # ==========================================
 
 elif page == "ℹ About":
 
-    st.header("ℹ About Project")
+    st.header("ℹ️ About AI Customer Support Log Analyser")
 
-    st.write("""
-### AI Customer Support Log Analyser
+    st.markdown("""
+    ## 🎯 Project Objective
 
-This project uses Machine Learning and NLP techniques to automatically classify
-customer complaints into predefined categories.
+    The **AI Customer Support Log Analyser** is a Machine Learning and NLP application
+    that automatically classifies customer complaints into predefined categories.
 
-#### Workflow
+    It helps organizations quickly analyze customer issues, reduce manual effort,
+    and improve support efficiency.
+    """)
 
-Complaint
+    st.divider()
 
-⬇
+    col1, col2 = st.columns(2)
 
-Text Cleaning
+    with col1:
 
-⬇
+        st.subheader("🚀 Key Features")
 
-TF-IDF
+        st.success("""
+✔ Interactive Dashboard
 
-⬇
+✔ Complaint Analytics
 
-Machine Learning
+✔ AI Complaint Classification
 
-⬇
+✔ NLP Text Processing
 
-Prediction
+✔ TF-IDF Vectorization
 
----
+✔ Machine Learning Prediction
 
-Developed using:
+✔ Model Performance Overview
 
-- Python
-- Streamlit
-- Scikit-Learn
-- NLTK
+✔ Professional Streamlit Interface
 """)
+
+    with col2:
+
+        st.subheader("🛠 Technologies Used")
+
+        st.info("""
+• Python
+
+• Streamlit
+
+• Pandas
+
+• NumPy
+
+• Plotly
+
+• Scikit-Learn
+
+• NLTK
+
+• Joblib
+
+• WordCloud
+""")
+
+    st.divider()
+
+    st.subheader("📂 Machine Learning Workflow")
+
+    st.markdown("""
