@@ -10,9 +10,6 @@ def load_data():
 
 df = load_data()
 
-st.write("Columns:", df.columns.tolist())
-st.stop()
-
 # ==========================================
 # PAGE CONFIG
 # ==========================================
@@ -159,14 +156,19 @@ elif page == "📊 Dashboard":
 
     st.header("📊 Analytics Dashboard")
 
+    # KPI Cards
     c1, c2, c3, c4 = st.columns(4)
 
     c1.metric("Total Complaints", len(df))
-    c2.metric("Categories", df["Category"].nunique())
-    c3.metric("Average Length", round(df["Complaint"].str.len().mean()))
+    c2.metric("Categories", df["product"].nunique())
+    c3.metric("Average Length", round(df["narrative"].astype(str).str.len().mean()))
     c4.metric("Missing Values", df.isna().sum().sum())
 
     st.divider()
+
+    # ------------------------------
+    # Charts
+    # ------------------------------
 
     col1, col2 = st.columns(2)
 
@@ -174,11 +176,19 @@ elif page == "📊 Dashboard":
 
         st.subheader("Complaint Categories")
 
+        category_counts = (
+            df["product"]
+            .value_counts()
+            .reset_index()
+        )
+
+        category_counts.columns = ["Product", "Count"]
+
         fig = px.bar(
-            df["Category"].value_counts().reset_index(),
-            x="Category",
-            y="count",
-            color="Category",
+            category_counts,
+            x="Product",
+            y="Count",
+            color="Product",
             title="Complaint Distribution"
         )
 
@@ -190,18 +200,23 @@ elif page == "📊 Dashboard":
 
         fig2 = px.pie(
             df,
-            names="Category",
-            hole=.5
+            names="product",
+            hole=0.5,
+            title="Complaint Share"
         )
 
         st.plotly_chart(fig2, use_container_width=True)
 
     st.divider()
-    
-    st.subheader("☁ Most Frequent Words")
-    
-    text = " ".join(df["Complaint"].astype(str))
-    
+
+    # ------------------------------
+    # Word Cloud
+    # ------------------------------
+
+    st.subheader("☁️ Most Frequent Words")
+
+    text = " ".join(df["narrative"].astype(str))
+
     wc = WordCloud(
         width=900,
         height=400,
@@ -209,18 +224,21 @@ elif page == "📊 Dashboard":
     ).generate(text)
 
     fig, ax = plt.subplots(figsize=(12,5))
-    
+
     ax.imshow(wc)
-    
+
     ax.axis("off")
-    
+
     st.pyplot(fig)
 
-    #Complaint table
     st.divider()
-    
+
+    # ------------------------------
+    # Data Table
+    # ------------------------------
+
     st.subheader("Recent Complaints")
-    
+
     st.dataframe(
         df.head(20),
         use_container_width=True
