@@ -117,7 +117,7 @@ with st.sidebar:
             "📂 Dataset Explorer",
             "🤖 AI Predictor",
             "📈 Model Performance",
-            "ℹ️ About Project"
+            "ℹ️ About"
         ),
         label_visibility="collapsed"
     )
@@ -553,7 +553,7 @@ elif page == "📈 Model Performance":
 # ABOUT PROJECT
 # ==========================================
 
-elif page == "ℹ About":
+elif page == "ℹ️ About":
 
     st.header("ℹ️ About AI Customer Support Log Analyser")
 
