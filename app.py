@@ -38,6 +38,32 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown("""
+<style>
+.kpi-card {
+    background-color: #1e293b;
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 6px solid #3b82f6;
+    text-align: center;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.3);
+    margin-bottom: 10px;
+}
+
+.kpi-title {
+    color: #cbd5e1;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.kpi-value {
+    color: white;
+    font-size: 34px;
+    font-weight: bold;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ==========================================
 # CUSTOM CSS
 # ==========================================
@@ -193,12 +219,39 @@ elif page == "📊 Dashboard":
     st.header("📊 Analytics Dashboard")
 
     # KPI Cards
-    c1, c2, c3, c4 = st.columns(4)
-
-    c1.metric("Total Complaints", len(df))
-    c2.metric("Categories", df["product"].nunique())
-    c3.metric("Average Length", round(df["narrative"].astype(str).str.len().mean()))
-    c4.metric("Missing Values", df.isna().sum().sum())
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.markdown(f"""
+        <div class="kpi-card">
+            <div class="kpi-title">📄 Total Complaints</div>
+            <div class="kpi-value">{len(df)}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown(f"""
+        <div class="kpi-card">
+            <div class="kpi-title">📂 Categories</div>
+            <div class="kpi-value">{df['product'].nunique()}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown(f"""
+        <div class="kpi-card">
+            <div class="kpi-title">📝 Avg Length</div>
+            <div class="kpi-value">{round(df['narrative'].astype(str).str.len().mean())}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col4:
+        st.markdown(f"""
+        <div class="kpi-card">
+            <div class="kpi-title">⚠️ Missing Values</div>
+            <div class="kpi-value">{df.isna().sum().sum()}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
     st.divider()
 
