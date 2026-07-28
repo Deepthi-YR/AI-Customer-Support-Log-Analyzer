@@ -117,7 +117,7 @@ with st.sidebar:
             "📂 Dataset Explorer",
             "🤖 AI Predictor",
             "📈 Model Performance",
-            "ℹ️ About"
+            "ℹ️ About Project"
         ),
         label_visibility="collapsed"
     )
