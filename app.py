@@ -377,37 +377,50 @@ elif page == "📂 Dataset Explorer":
         placeholder="Type any keyword..."
     )
 
+    # Search Complaint
     if search:
+    
         filtered_df = filtered_df[
             filtered_df["narrative"]
             .astype(str)
             .str.contains(search, case=False, na=False)
         ]
-
+    
     st.divider()
-
+    
     st.subheader("📋 Complaint Records")
-
+    
     rows = st.slider(
-    "Number of Rows",
-    min_value=10,
-    max_value=100,
-    value=20
+        "Number of Rows",
+        min_value=10,
+        max_value=100,
+        value=20
     )
     
-    st.dataframe(
-        filtered_df.head(rows),
-        use_container_width=True,
-        height=450
-    )
-    st.dataframe(
-        filtered_df,
-        use_container_width=True,
-        height=450
-    )
-
-    st.write(f"Showing **{len(filtered_df)}** records")
-
+    # Highlight searched word
+    display_df = filtered_df.head(rows).copy()
+    
+    if search:
+        display_df["narrative"] = display_df["narrative"].astype(str).str.replace(
+            search,
+            f"<mark>{search}</mark>",
+            case=False,
+            regex=True
+        )
+    
+        st.markdown(
+            display_df.to_html(index=False, escape=False),
+            unsafe_allow_html=True
+        )
+    
+    else:
+        st.dataframe(
+            display_df,
+            use_container_width=True,
+            height=450
+        )
+    
+    st.write(f"Showing **{min(rows, len(filtered_df))}** of **{len(filtered_df)}** records")
     st.divider()
 
     csv = filtered_df.to_csv(index=False).encode("utf-8")
@@ -510,7 +523,7 @@ elif page == "📈 Model Performance":
     st.subheader("🏆 Model Information")
 
     st.info("""
-**Algorithm:** Best Performing Model
+**Algorithm:** Logistic Regression
 
 **Text Vectorization:** TF-IDF
 
