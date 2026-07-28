@@ -40,30 +40,32 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-.kpi-card {
-    background-color: #1e293b;
-    padding: 20px;
-    border-radius: 12px;
-    border-left: 6px solid #3b82f6;
-    text-align: center;
-    box-shadow: 0px 2px 8px rgba(0,0,0,0.3);
-    margin-bottom: 10px;
+
+.kpi-card{
+    background:#1E293B;
+    border-radius:12px;
+    padding:20px;
+    text-align:center;
+    border-left:6px solid #4F8BF9;
+    margin-bottom:15px;
+    box-shadow:0px 3px 8px rgba(0,0,0,0.35);
 }
 
-.kpi-title {
-    color: #cbd5e1;
-    font-size: 16px;
-    font-weight: 600;
+.kpi-title{
+    font-size:16px;
+    color:#CBD5E1;
+    font-weight:600;
 }
 
-.kpi-value {
-    color: white;
-    font-size: 34px;
-    font-weight: bold;
+.kpi-value{
+    font-size:34px;
+    color:white;
+    font-weight:bold;
+    margin-top:10px;
 }
+
 </style>
 """, unsafe_allow_html=True)
-
 # ==========================================
 # CUSTOM CSS
 # ==========================================
@@ -104,6 +106,15 @@ div[data-testid="stMetric"]{
 
 </style>
 """, unsafe_allow_html=True)
+
+def kpi_card(title, value):
+
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-title">{title}</div>
+        <div class="kpi-value">{value}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ==========================================
 # HEADER
@@ -170,10 +181,17 @@ if page == "🏠 Home":
 
     c1,c2,c3,c4 = st.columns(4)
 
-    c1.metric("Dataset","Consumer Complaints")
-    c2.metric("Model","Logistic Regression")
-    c3.metric("NLP","TF-IDF")
-    c4.metric("Framework","Streamlit")
+    with c1:
+        kpi_card("📄 Complaints", len(df))
+    
+    with c2:
+        kpi_card("📂 Categories", df["product"].nunique())
+    
+    with c3:
+        kpi_card("🤖 Model", "ML")
+    
+    with c4:
+        kpi_card("🚀 Status", "Ready")
 
     st.write("")
 
@@ -219,40 +237,20 @@ elif page == "📊 Dashboard":
     st.header("📊 Analytics Dashboard")
 
     # KPI Cards
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-title">📄 Total Complaints</div>
-            <div class="kpi-value">{len(df)}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-title">📂 Categories</div>
-            <div class="kpi-value">{df['product'].nunique()}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-title">📝 Avg Length</div>
-            <div class="kpi-value">{round(df['narrative'].astype(str).str.len().mean())}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col4:
-        st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-title">⚠️ Missing Values</div>
-            <div class="kpi-value">{df.isna().sum().sum()}</div>
-        </div>
-        """, unsafe_allow_html=True)
+    c1,c2,c3,c4 = st.columns(4)
 
+    with c1:
+        kpi_card("📄 Total", len(df))
+    
+    with c2:
+        kpi_card("📂 Products", df["product"].nunique())
+    
+    with c3:
+        avg = round(df["narrative"].astype(str).str.len().mean())
+        kpi_card("📝 Avg Length", avg)
+    
+    with c4:
+        kpi_card("⚠ Missing", df.isna().sum().sum())
     st.divider()
 
     # ------------------------------
@@ -403,11 +401,16 @@ elif page == "📂 Dataset Explorer":
     st.divider()
 
     # KPI Cards
-    c1, c2, c3 = st.columns(3)
+    c1,c2,c3 = st.columns(3)
 
-    c1.metric("Total Records", len(df))
-    c2.metric("Products", df["product"].nunique())
-    c3.metric("Columns", len(df.columns))
+    with c1:
+        kpi_card("📄 Records", len(df))
+    
+    with c2:
+        kpi_card("📂 Products", df["product"].nunique())
+    
+    with c3:
+        kpi_card("📋 Columns", len(df.columns))
 
     st.divider()
 
@@ -521,13 +524,13 @@ elif page == "🤖 AI Predictor":
             st.success("✅ Prediction Completed!")
             
             # KPI Cards
-            col1, col2 = st.columns(2)
-            
+            col1,col2 = st.columns(2)
+
             with col1:
-                st.metric("🎯 Predicted Category", predicted_category)
+                kpi_card("🎯 Prediction", predicted_category)
             
             with col2:
-                st.metric("📊 Confidence", f"{confidence:.2f}%")
+                kpi_card("📊 Confidence", f"{confidence:.2f}%")
             
             # Probability Chart
             prob_df = pd.DataFrame({
@@ -564,12 +567,19 @@ elif page == "📈 Model Performance":
     st.write("Performance summary of the trained Machine Learning model.")
 
     # KPI Cards
-    c1, c2, c3, c4 = st.columns(4)
+    c1,c2,c3,c4 = st.columns(4)
 
-    c1.metric("Model", "Best Model")
-    c2.metric("Vectorizer", "TF-IDF")
-    c3.metric("Classes", len(encoder.classes_))
-    c4.metric("Status", "Ready")
+    with c1:
+        kpi_card("🤖 Algorithm", "Logistic Regression")
+    
+    with c2:
+        kpi_card("📄 Vectorizer", "TF-IDF")
+    
+    with c3:
+        kpi_card("📂 Classes", len(encoder.classes_))
+    
+    with c4:
+        kpi_card("✅ Status", "Ready")
 
     st.divider()
 
