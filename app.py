@@ -388,6 +388,13 @@ elif page == "📊 Dashboard":
         use_container_width=True
     )
 
+    # -----------------------------
+    # Model performance comaprision
+    # -----------------------------
+
+    st.subheader("Model Performance Comparison")
+    st.dataframe(results)
+    
 # ==========================================
 # DATASET EXPLORER
 # ==========================================
