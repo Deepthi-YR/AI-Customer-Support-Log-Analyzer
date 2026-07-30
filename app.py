@@ -387,13 +387,6 @@ elif page == "📊 Dashboard":
         df.head(20),
         use_container_width=True
     )
-
-    # -----------------------------
-    # Model performance comaprision
-    # -----------------------------
-
-    st.subheader("Model Performance Comparison")
-    st.dataframe(results)
     
 # ==========================================
 # DATASET EXPLORER
@@ -618,6 +611,13 @@ elif page == "📈 Model Performance":
     st.divider()
 
     st.success("✅ Model loaded successfully and ready for prediction.")
+
+    # -----------------------------
+    # Model performance comparision
+    # -----------------------------
+
+    st.subheader("Model Performance Comparison")
+    st.dataframe(results)
 
 # ==========================================
 # ABOUT PROJECT
