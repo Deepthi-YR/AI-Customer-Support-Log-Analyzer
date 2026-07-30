@@ -633,7 +633,7 @@ elif page == "📈 Model Performance":
     
     st.table(performance_df)
 
-    st.subheader("📈 Figure 4.7: Accuracy Comparison of Machine Learning Models")
+    st.subheader("📈 Accuracy Comparison of Machine Learning Models")
 
     fig = px.bar(
         performance_df,
