@@ -610,14 +610,53 @@ elif page == "📈 Model Performance":
 
     st.divider()
 
+    st.subheader("📊 Model Performance Comparison")
+
+    performance_df = pd.DataFrame({
+        "Model": [
+            "Logistic Regression",
+            "Linear SVM",
+            "Naïve Bayes",
+            "XGBoost",
+            "Random Forest",
+            "Decision Tree"
+        ],
+        "Accuracy (%)": [
+            84.71,
+            84.24,
+            81.02,
+            80.07,
+            78.40,
+            77.50
+        ]
+    })
+    
+    st.table(performance_df)
+
+    st.subheader("📈 Figure 4.7: Accuracy Comparison of Machine Learning Models")
+
+    fig = px.bar(
+        performance_df,
+        x="Model",
+        y="Accuracy (%)",
+        text="Accuracy (%)"
+    )
+    
+    fig.update_traces(
+        texttemplate="%{text:.2f}%",
+        textposition="outside"
+    )
+    
+    fig.update_layout(
+        height=500,
+        xaxis_title="Machine Learning Models",
+        yaxis_title="Accuracy (%)",
+        yaxis=dict(range=[70,90])
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+
     st.success("✅ Model loaded successfully and ready for prediction.")
-
-    # -----------------------------
-    # Model performance comparision
-    # -----------------------------
-
-    st.subheader("Model Performance Comparison")
-    st.dataframe(results)
 
 # ==========================================
 # ABOUT PROJECT
